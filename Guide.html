@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="ko" data-lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NAI Review Viewer — Guide</title>
+<style>
+:root { --bg:#f7f7f5; --card:#fff; --ink:#1d2129; --dim:#5d6470; --line:#e0e0dc; --acc:#2563a8; --acc-bg:#e8f0fa; --ok:#1f7a3d; --bad:#b3261e; --warn-bg:#fff6e0; --warn-line:#e6c36a; --kbd:#eeeeea; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#14161a; --card:#1c1f25; --ink:#e6e8ec; --dim:#9aa2ae; --line:#2e333c; --acc:#7db3f0; --acc-bg:#1d2a3a; --ok:#63c784; --bad:#ff8a80; --warn-bg:#2e2819; --warn-line:#6b5a25; --kbd:#2a2e36; }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 64px; }
+body { margin:0; background:var(--bg); color:var(--ink); font: 16px/1.7 "Segoe UI", "Malgun Gothic", "Yu Gothic UI", "Meiryo", system-ui, sans-serif; }
+html[data-lang=ko] .e, html[data-lang=ko] .j, html[data-lang=en] .k, html[data-lang=en] .j, html[data-lang=ja] .k, html[data-lang=ja] .e { display:none !important; }
+header { position:sticky; top:0; z-index:5; background:var(--card); border-bottom:1px solid var(--line); }
+.bar { max-width:900px; margin:0 auto; padding:10px 16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.bar b { font-size:17px; }
+.bar .sp { flex:1; }
+.lang button { font:inherit; font-size:14px; padding:4px 12px; border:1px solid var(--line); background:transparent; color:var(--ink); border-radius:6px; cursor:pointer; }
+.lang button[aria-pressed=true] { background:var(--acc); border-color:var(--acc); color:#fff; }
+main { max-width:900px; margin:0 auto; padding:8px 16px 80px; }
+h1 { font-size:30px; line-height:1.3; margin:28px 0 6px; }
+.lead { color:var(--dim); margin:0 0 20px; }
+nav.toc { display:flex; flex-wrap:wrap; gap:6px 8px; margin:0 0 8px; }
+nav.toc a { font-size:14px; padding:3px 10px; border-radius:999px; background:var(--acc-bg); color:var(--acc); text-decoration:none; }
+section { background:var(--card); border:1px solid var(--line); border-radius:12px; padding:6px 22px 18px; margin:18px 0; }
+h2 { font-size:21px; margin:18px 0 8px; }
+h3 { font-size:16px; margin:18px 0 4px; }
+p { margin:8px 0; }
+a { color:var(--acc); }
+ol, ul { margin:8px 0; padding-left:24px; }
+li { margin:4px 0; }
+kbd, code { font: 13px/1.4 Consolas, "Cascadia Mono", monospace; background:var(--kbd); border:1px solid var(--line); border-radius:5px; padding:1px 6px; white-space:nowrap; }
+code { white-space:normal; word-break:break-all; }
+.tw { overflow-x:auto; }
+table { border-collapse:collapse; width:100%; margin:8px 0; font-size:15px; }
+th, td { text-align:left; vertical-align:top; padding:7px 10px; border-bottom:1px solid var(--line); }
+th { color:var(--dim); font-weight:600; font-size:13px; }
+td:first-child { white-space:nowrap; }
+.note { background:var(--warn-bg); border:1px solid var(--warn-line); border-radius:8px; padding:8px 14px; margin:12px 0; font-size:15px; }
+.steps { counter-reset:s; list-style:none; padding:0; }
+.steps > li { counter-increment:s; position:relative; padding:2px 0 2px 44px; margin:10px 0; }
+.steps > li::before { content:counter(s); position:absolute; left:0; top:0; width:30px; height:30px; border-radius:50%; background:var(--acc); color:#fff; font-weight:700; display:grid; place-items:center; }
+.ok { color:var(--ok); font-weight:600; } .bad { color:var(--bad); font-weight:600; }
+.prompt { display:grid; gap:8px; }
+.prompt input { font:inherit; padding:7px 10px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink); width:100%; }
+.prompt textarea { font: 13px/1.5 Consolas, "Cascadia Mono", monospace; width:100%; height:260px; padding:10px; border:1px solid var(--line); border-radius:6px; background:var(--bg); color:var(--ink); resize:vertical; }
+.prompt button { justify-self:start; font:inherit; padding:7px 16px; border-radius:6px; border:0; background:var(--acc); color:#fff; cursor:pointer; }
+footer { color:var(--dim); font-size:14px; text-align:center; margin-top:28px; }
+</style>
+</head>
+<body>
+<header><div class="bar">
+  <b>NAI Review Viewer</b><span class="sp"></span>
+  <div class="lang" role="group" aria-label="Language">
+    <button data-set="ko">한국어</button> <button data-set="en">English</button> <button data-set="ja">日本語</button>
+  </div>
+</div></header>
+<main>
+
+<h1><span class="k">NAI 검수 뷰어 사용 가이드</span><span class="e">NAI Review Viewer Guide</span><span class="j">NAI 検品ビューア ガイド</span></h1>
+<p class="lead">
+  <span class="k">수백~수천 장의 NovelAI 이미지를 눈으로 빠르게 훑고, 불합격 컷에만 사유를 체크하는 Windows용 로컬 앱입니다. 인터넷으로 아무것도 보내지 않습니다.</span>
+  <span class="e">A local Windows app for skimming hundreds or thousands of NovelAI images by eye and marking only the ones that fail. Nothing is sent over the internet.</span>
+  <span class="j">数百〜数千枚の NovelAI 画像を目ですばやく確認し、不合格の画像にだけ理由をチェックする Windows 用ローカルアプリです。インターネットには何も送信しません。</span>
+</p>
+<nav class="toc">
+  <a href="#install"><span class="k">설치</span><span class="e">Install</span><span class="j">インストール</span></a>
+  <a href="#start"><span class="k">시작하기</span><span class="e">Quick start</span><span class="j">はじめに</span></a>
+  <a href="#marks"><span class="k">체크</span><span class="e">Marks</span><span class="j">チェック</span></a>
+  <a href="#keys"><span class="k">보는 법</span><span class="e">Viewing</span><span class="j">見かた</span></a>
+  <a href="#bulk"><span class="k">여러 장·삭제</span><span class="e">Bulk &amp; delete</span><span class="j">複数枚・削除</span></a>
+  <a href="#censor"><span class="k">검열 덧칠</span><span class="e">Censor touch-up</span><span class="j">修正加筆</span></a>
+  <a href="#export"><span class="k">결과 내보내기</span><span class="e">Export</span><span class="j">書き出し</span></a>
+  <a href="#llm"><span class="k">LLM 연결</span><span class="e">Connect an LLM</span><span class="j">LLM 接続</span></a>
+  <a href="#config"><span class="k">설정</span><span class="e">Settings</span><span class="j">設定</span></a>
+  <a href="#help"><span class="k">문제 해결</span><span class="e">Troubleshooting</span><span class="j">困ったとき</span></a>
+</nav>
+
+<section id="install">
+<h2><span class="k">1. 설치</span><span class="e">1. Install</span><span class="j">1. インストール</span></h2>
+<div class="k">
+  <p>Windows 10·11에서 동작합니다. Python이나 다른 프로그램을 따로 설치할 필요가 없습니다.</p>
+  <ol class="steps">
+    <li>GitHub의 <b>Releases</b>에서 <code>nai-review-viewer-…-win64.zip</code>을 내려받습니다.</li>
+    <li>zip을 우클릭 → <b>속성</b> → 아래쪽 <b>차단 해제</b>에 체크 → 확인. 그다음 원하는 곳에 압축을 풉니다. (예: <code>C:\NAI-Review-Viewer</code>)</li>
+    <li>폴더 안의 <b>NAI-Review-Viewer.bat</b>을 더블클릭합니다. 검은 콘솔 창과 뷰어 창이 함께 열리면 끝입니다.</li>
+  </ol>
+  <p class="note">"Windows의 PC 보호" 창이 뜨면 <b>추가 정보 → 실행</b>을 누르세요. 서명이 없는 프로그램에 처음 한 번 뜨는 안내입니다.</p>
+  <h3>소스로 받은 경우 (Code → Download ZIP 또는 git clone)</h3>
+  <p>실행 환경이 들어 있지 않으므로 <b>Install.bat</b>을 한 번 실행합니다. 이 폴더의 <code>runtime\</code> 안에만 Python과 라이브러리(약 80MB)를 내려받고, PC의 다른 곳에는 아무것도 설치하지 않습니다. 끝나면 <b>NAI-Review-Viewer.bat</b>으로 실행합니다.</p>
+</div>
+<div class="e">
+  <p>Runs on Windows 10 and 11. You do not need to install Python or anything else.</p>
+  <ol class="steps">
+    <li>Download <code>nai-review-viewer-…-win64.zip</code> from <b>Releases</b> on GitHub.</li>
+    <li>Right-click the zip → <b>Properties</b> → tick <b>Unblock</b> at the bottom → OK. Then extract it anywhere you like (for example <code>C:\NAI-Review-Viewer</code>).</li>
+    <li>Double-click <b>NAI-Review-Viewer.bat</b> in the folder. A black console window and the viewer window open together, and you are done.</li>
+  </ol>
+  <p class="note">If "Windows protected your PC" appears, choose <b>More info → Run anyway</b>. Windows shows this once for programs that are not code-signed.</p>
+  <h3>If you got the source (Code → Download ZIP, or git clone)</h3>
+  <p>The runtime is not included, so run <b>Install.bat</b> once. It downloads Python and the libraries (about 80 MB) into <code>runtime\</code> inside this folder only and installs nothing elsewhere on your PC. After that, start the app with <b>NAI-Review-Viewer.bat</b>.</p>
+</div>
+<div class="j">
+  <p>Windows 10・11 で動作します。Python などを別途インストールする必要はありません。</p>
+  <ol class="steps">
+    <li>GitHub の <b>Releases</b> から <code>nai-review-viewer-…-win64.zip</code> をダウンロードします。</li>
+    <li>zip を右クリック → <b>プロパティ</b> → 下の <b>許可する(ブロックの解除)</b> にチェック → OK。その後、好きな場所に展開します(例: <code>C:\NAI-Review-Viewer</code>)。</li>
+    <li>フォルダ内の <b>NAI-Review-Viewer.bat</b> をダブルクリックします。黒いコンソールウィンドウとビューアのウィンドウが開けば完了です。</li>
+  </ol>
+  <p class="note">「Windows によって PC が保護されました」と表示されたら、<b>詳細情報 → 実行</b> を選んでください。署名のないプログラムに最初の一度だけ出る案内です。</p>
+  <h3>ソースで入手した場合 (Code → Download ZIP、または git clone)</h3>
+  <p>実行環境が含まれていないので、<b>Install.bat</b> を一度実行します。このフォルダの <code>runtime\</code> の中だけに Python とライブラリ(約 80MB)をダウンロードし、PC の他の場所には何もインストールしません。終わったら <b>NAI-Review-Viewer.bat</b> で起動します。</p>
+</div>
+</section>
+
+<section id="start">
+<h2><span class="k">2. 시작하기</span><span class="e">2. Quick start</span><span class="j">2. はじめに</span></h2>
+<div class="k">
+  <ol class="steps">
+    <li><b>폴더 열기.</b> 뷰어 왼쪽 위 📁(<kbd>Ctrl+O</kbd>)에서 이미지 폴더 경로를 붙여 넣거나 찾아보기로 고릅니다. 폴더를 <b>NAI-Review-Viewer.bat</b> 위에 끌어다 놓아도 됩니다.</li>
+    <li><b>훑어보기.</b> <kbd>→</kbd>로 다음 페이지로 넘깁니다. 화면에 잠깐(0.45초) 머문 이미지는 "본 것"으로 기록됩니다.</li>
+    <li><b>문제 있는 컷만 체크.</b> 마우스를 올린 칸에서 숫자 키 <kbd>1</kbd>~<kbd>9</kbd>를 누릅니다. 아무 체크 없이 본 이미지는 <span class="ok">합격</span>입니다.</li>
+    <li><b>내보내기.</b> 다 보면 <b>⇩ 내보내기</b>(<kbd>Ctrl+E</kbd>)를 누릅니다. 불합격 목록과 사유가 폴더 안 <code>_review</code>에 저장됩니다.</li>
+  </ol>
+  <p>언어는 Windows 표시 언어를 따라가고, 뷰어의 ⚙ 설정 맨 위 <b>Language</b>에서 바꿀 수 있습니다. 뷰어를 끝내려면 검은 콘솔 창을 닫습니다. 다시 열면 마지막으로 보던 자리에서 이어집니다.</p>
+</div>
+<div class="e">
+  <ol class="steps">
+    <li><b>Open a folder.</b> Click 📁 at the top left (<kbd>Ctrl+O</kbd>) and paste the image folder path or browse for it. You can also drag a folder onto <b>NAI-Review-Viewer.bat</b>.</li>
+    <li><b>Skim.</b> Press <kbd>→</kbd> for the next page. An image that stays on screen briefly (0.45 s) is recorded as "seen".</li>
+    <li><b>Mark only the problem images.</b> Hover over a cell and press a number key <kbd>1</kbd>–<kbd>9</kbd>. A seen image with no mark is a <span class="ok">pass</span>.</li>
+    <li><b>Export.</b> When you finish, press <b>⇩ Export</b> (<kbd>Ctrl+E</kbd>). The reject list and reasons are saved in <code>_review</code> inside the folder.</li>
+  </ol>
+  <p>The language follows the Windows display language; change it under <b>Language</b> at the top of ⚙ Settings. To quit, close the black console window. Next time the viewer resumes where you left off.</p>
+</div>
+<div class="j">
+  <ol class="steps">
+    <li><b>フォルダを開く。</b>左上の 📁(<kbd>Ctrl+O</kbd>)で画像フォルダのパスを貼り付けるか、参照で選びます。フォルダを <b>NAI-Review-Viewer.bat</b> にドラッグ&ドロップしても開けます。</li>
+    <li><b>ざっと見る。</b><kbd>→</kbd> で次のページへ進みます。画面に少しの間(0.45 秒)表示された画像は「確認済み」と記録されます。</li>
+    <li><b>問題のある画像だけチェック。</b>マウスを乗せたセルで数字キー <kbd>1</kbd>〜<kbd>9</kbd> を押します。チェックなしで確認した画像は<span class="ok">合格</span>です。</li>
+    <li><b>書き出し。</b>見終わったら <b>⇩ 書き出し</b>(<kbd>Ctrl+E</kbd>)を押します。不合格のリストと理由がフォルダ内の <code>_review</code> に保存されます。</li>
+  </ol>
+  <p>言語は Windows の表示言語に従い、⚙ 設定の一番上の <b>Language</b> で変更できます。終了するには黒いコンソールウィンドウを閉じます。次回は最後に見ていた位置から再開します。</p>
+</div>
+</section>
+
+<section id="marks">
+<h2><span class="k">3. 체크</span><span class="e">3. Marks</span><span class="j">3. チェック</span></h2>
+<div class="tw"><table>
+<tr><th><span class="k">키</span><span class="e">Key</span><span class="j">キー</span></th><th><span class="k">체크</span><span class="e">Mark</span><span class="j">チェック</span></th><th><span class="k">판정</span><span class="e">Verdict</span><span class="j">判定</span></th></tr>
+<tr><td><kbd>Q</kbd></td><td><span class="k">좋음·비슷하게 추가 생산</span><span class="e">Good · make more like this</span><span class="j">良い・似たものを追加生産</span></td><td><span class="ok"><span class="k">합격</span><span class="e">Pass</span><span class="j">合格</span></span> <span class="k">+ 더 뽑아 달라는 표시</span><span class="e">+ a request for more</span><span class="j">+ 追加生産の依頼</span></td></tr>
+<tr><td><kbd>W</kbd></td><td><span class="k">세트 중 이것만 합격 (★)</span><span class="e">Only this one of the set passes (★)</span><span class="j">セットの中でこれだけ合格 (★)</span></td><td><span class="k">같은 세트의 체크 없는 나머지는 "세트 탈락"(다시 뽑을 필요 없음)</span><span class="e">The unmarked rest of the set is "dropped from set" (no need to regenerate)</span><span class="j">同じセットのチェックのない残りは「セット落ち」(再生成不要)</span></td></tr>
+<tr><td><kbd>1</kbd>–<kbd>6</kbd></td><td><span class="k">신체 부정확 · 추가 신체부위 · 불필요한 인원 · 구도/상황 아님 · 퀄리티 부족 · 지저분함</span><span class="e">Wrong anatomy · extra body parts · extra people · wrong composition/scene · low quality · messy</span><span class="j">身体が不正確 · 余分な部位 · 不要な人物 · 構図/状況が違う · 品質不足 · ごちゃつき</span></td><td><span class="bad"><span class="k">불합격</span><span class="e">Reject</span><span class="j">不合格</span></span></td></tr>
+<tr><td><kbd>7</kbd></td><td><span class="k">다른 구상 필요</span><span class="e">Needs a different concept</span><span class="j">別の構想が必要</span></td><td><span class="bad"><span class="k">불합격</span><span class="e">Reject</span><span class="j">不合格</span></span> <span class="k">(프롬프트 손질로는 안 되는 컷)</span><span class="e">(prompt tweaks will not fix it)</span><span class="j">(プロンプトの調整では直らない)</span></td></tr>
+<tr><td><kbd>8</kbd></td><td><span class="k">기타 (직접 작성)</span><span class="e">Other (write a note)</span><span class="j">その他 (メモに記入)</span></td><td><span class="bad"><span class="k">불합격</span><span class="e">Reject</span><span class="j">不合格</span></span> <span class="k">· 메모 창이 열림</span><span class="e">· opens the note box</span><span class="j">· メモ欄が開く</span></td></tr>
+<tr><td><kbd>9</kbd></td><td><span class="k">검열 약함</span><span class="e">Weak censoring</span><span class="j">修正が弱い</span></td><td><span class="bad"><span class="k">불합격</span><span class="e">Reject</span><span class="j">不合格</span></span> <span class="k">· <a href="#censor">검열 덧칠</a>로 바로 고칠 수 있음</span><span class="e">· can be fixed on the spot with <a href="#censor">censor touch-up</a></span><span class="j">· <a href="#censor">修正加筆</a>でその場で直せる</span></td></tr>
+<tr><td><kbd>M</kbd></td><td><span class="k">메모</span><span class="e">Note</span><span class="j">メモ</span></td><td><span class="k">최근에 쓴 메모를 버튼으로 다시 쓸 수 있음</span><span class="e">Recent notes can be reused as buttons</span><span class="j">最近のメモをボタンで再利用できる</span></td></tr>
+<tr><td><kbd>0</kbd> · <kbd>Backspace</kbd></td><td><span class="k">체크 해제</span><span class="e">Clear marks</span><span class="j">チェック解除</span></td><td></td></tr>
+<tr><td><kbd>Ctrl+Z</kbd></td><td><span class="k">되돌리기</span><span class="e">Undo</span><span class="j">元に戻す</span></td><td></td></tr>
+</table></div>
+<div class="k">
+  <ul>
+    <li>같은 키를 다시 누르면 꺼집니다. 사유는 여러 개를 함께 걸 수 있고, 우클릭 메뉴와 아래쪽 버튼으로도 체크할 수 있습니다.</li>
+    <li><b>세트</b>는 같은 폴더에서 파일명 끝의 변형 번호(<code>_2</code>, <code>_3</code> …)만 다른 이미지 묶음입니다. <kbd>V</kbd>로 세트별 보기와 그리드를 오갑니다.</li>
+    <li>체크한 뒤 파일이 바뀌면(같은 이름으로 다시 생성) 이전 체크는 무시되고 그 이미지는 다시 "안 본 것"이 됩니다.</li>
+    <li>한글 입력 상태여도 단축키가 그대로 듣습니다.</li>
+  </ul>
+</div>
+<div class="e">
+  <ul>
+    <li>Press the same key again to turn a mark off. You can combine several reasons, and you can also mark from the right-click menu or the buttons at the bottom.</li>
+    <li>A <b>set</b> is a group of images in one folder whose file names differ only by a trailing variant number (<code>_2</code>, <code>_3</code> …). <kbd>V</kbd> switches between set view and the grid.</li>
+    <li>If a file changes after you mark it (regenerated under the same name), the old marks are ignored and the image becomes "unseen" again.</li>
+  </ul>
+</div>
+<div class="j">
+  <ul>
+    <li>同じキーをもう一度押すと外れます。理由は複数同時に付けられ、右クリックメニューや下のボタンからもチェックできます。</li>
+    <li><b>セット</b>は、同じフォルダでファイル名末尾の変形番号(<code>_2</code>、<code>_3</code> …)だけが違う画像のまとまりです。<kbd>V</kbd> でセット別表示とグリッドを切り替えます。</li>
+    <li>チェックした後にファイルが変わると(同じ名前で再生成)、以前のチェックは無視され、その画像は「未確認」に戻ります。</li>
+    <li>日本語入力がオンのままでもショートカットはそのまま使えます。</li>
+  </ul>
+</div>
+</section>
+
+<section id="keys">
+<h2><span class="k">4. 보는 법</span><span class="e">4. Viewing</span><span class="j">4. 見かた</span></h2>
+<div class="tw"><table>
+<tr><th><span class="k">키</span><span class="e">Key</span><span class="j">キー</span></th><th><span class="k">동작</span><span class="e">Action</span><span class="j">動作</span></th></tr>
+<tr><td><kbd>←</kbd> <kbd>→</kbd> · <kbd>PgUp</kbd> <kbd>PgDn</kbd></td><td><span class="k">이전 / 다음 페이지. Shift를 같이 누르면 10페이지씩</span><span class="e">Previous / next page. Hold Shift to move 10 pages</span><span class="j">前 / 次のページ。Shift を押しながらで 10 ページずつ</span></td></tr>
+<tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td><span class="k">페이지 안에서 칸 이동 (마우스를 올려도 선택)</span><span class="e">Move between cells on the page (hovering also selects)</span><span class="j">ページ内でセルを移動 (マウスを乗せても選択)</span></td></tr>
+<tr><td><kbd>Enter</kbd> · <span class="k">더블클릭</span><span class="e">double-click</span><span class="j">ダブルクリック</span></td><td><span class="k">1장 보기 ↔ 원래 보기 (1장 보기에서는 휠로 확대, 드래그로 이동)</span><span class="e">Single view ↔ previous view (in single view: wheel to zoom, drag to pan)</span><span class="j">1枚表示 ↔ 元の表示 (1枚表示ではホイールで拡大、ドラッグで移動)</span></td></tr>
+<tr><td><kbd>Space</kbd></td><td><span class="k">누르고 있는 동안 원본 크게 보기</span><span class="e">Hold to view the original large</span><span class="j">押している間、元画像を大きく表示</span></td></tr>
+<tr><td><kbd>+</kbd> <kbd>−</kbd> · <kbd>V</kbd></td><td><span class="k">한 화면 장수(1~48장) · 세트별 보기 ↔ 그리드</span><span class="e">Images per screen (1–48) · set view ↔ grid</span><span class="j">1画面の枚数(1〜48枚) · セット別表示 ↔ グリッド</span></td></tr>
+<tr><td><kbd>U</kbd> · <kbd>G</kbd> · <kbd>Home</kbd> <kbd>End</kbd></td><td><span class="k">다음 "안 본" 페이지로 · 페이지 번호로 이동 · 처음 / 마지막</span><span class="e">Next page with unseen images · go to page number · first / last</span><span class="j">次の「未確認」ページへ · ページ番号で移動 · 最初 / 最後</span></td></tr>
+<tr><td><kbd>F</kbd> · <kbd>I</kbd> · <kbd>B</kbd> · <kbd>K</kbd></td><td><span class="k">파일명 표시 · 정보 패널(경로·프롬프트·seed) · 폴더 트리 · 칸 배경</span><span class="e">Filenames · info panel (path, prompt, seed) · folder tree · cell background</span><span class="j">ファイル名 · 情報パネル(パス・プロンプト・seed) · フォルダツリー · セル背景</span></td></tr>
+<tr><td><kbd>/</kbd></td><td><span class="k">검색. 파일명 검색이고, <code>p:</code>로 시작하면 프롬프트 검색 (예: <code>p:open mouth, -smile</code>)</span><span class="e">Search by filename; start with <code>p:</code> to search prompts (e.g. <code>p:open mouth, -smile</code>)</span><span class="j">検索。ファイル名検索で、<code>p:</code> で始めるとプロンプト検索 (例: <code>p:open mouth, -smile</code>)</span></td></tr>
+<tr><td><kbd>C</kbd> · <kbd>Ctrl+C</kbd> · <kbd>O</kbd></td><td><span class="k">경로 복사 · 이미지 복사 · 탐색기에서 보기</span><span class="e">Copy path · copy image · show in Explorer</span><span class="j">パスをコピー · 画像をコピー · エクスプローラーで表示</span></td></tr>
+<tr><td><kbd>F5</kbd> · <kbd>H</kbd></td><td><span class="k">폴더 다시 읽기 · 단축키 전체 보기</span><span class="e">Reload folder · full shortcut list</span><span class="j">フォルダ再読み込み · ショートカット一覧</span></td></tr>
+</table></div>
+<p>
+  <span class="k">위쪽 필터로 안 본 것, 불합격, 사유별 등으로 좁혀 볼 수 있습니다. 폴더 트리의 ●는 안 본 장수, ✕는 불합격 장수입니다. 지원 형식은 webp · png · jpg · gif · bmp · avif입니다.</span>
+  <span class="e">Use the filter at the top to narrow the list to unseen, rejected, a single reason and so on. In the folder tree, ● is the unseen count and ✕ the rejected count. Supported formats: webp · png · jpg · gif · bmp · avif.</span>
+  <span class="j">上のフィルターで、未確認・不合格・理由別などに絞り込めます。フォルダツリーの ● は未確認の枚数、✕ は不合格の枚数です。対応形式は webp · png · jpg · gif · bmp · avif です。</span>
+</p>
+</section>
+
+<section id="bulk">
+<h2><span class="k">5. 여러 장 한꺼번에 · 삭제</span><span class="e">5. Bulk actions and delete</span><span class="j">5. 複数枚の操作・削除</span></h2>
+<div class="k">
+  <ul>
+    <li><b>선택:</b> <kbd>Ctrl</kbd>+클릭 또는 <kbd>X</kbd>로 하나씩, <kbd>Shift</kbd>+클릭으로 범위, 마우스를 누른 채 훑어서 여러 칸. <kbd>Ctrl+A</kbd>는 이 페이지 전부입니다. 선택이 있으면 체크·메모·삭제가 선택 전부에 적용됩니다.</li>
+    <li><b>일괄 합격 (<kbd>P</kbd>):</b> 체크하지 않은 "안 본" 이미지를 한 번에 본 것(합격)으로 처리합니다. 선택한 것, 지금 페이지까지, 목록 전체 중에서 고릅니다.</li>
+    <li><b>삭제 (<kbd>Del</kbd>):</b> Windows 휴지통으로 보냅니다. 휴지통에서 복원할 수 있고, 삭제 전 체크는 내보내기 결과에 남습니다.</li>
+  </ul>
+</div>
+<div class="e">
+  <ul>
+    <li><b>Select:</b> <kbd>Ctrl</kbd>+click or <kbd>X</kbd> for single cells, <kbd>Shift</kbd>+click for a range, or drag across cells with the mouse button held. <kbd>Ctrl+A</kbd> selects the whole page. With a selection, marks, notes and delete apply to all selected images.</li>
+    <li><b>Pass all (<kbd>P</kbd>):</b> records unmarked "unseen" images as seen (passed) in one go. Choose the selection, everything up to this page, or the whole list.</li>
+    <li><b>Delete (<kbd>Del</kbd>):</b> sends files to the Windows Recycle Bin. You can restore them from there, and their marks stay in the export.</li>
+  </ul>
+</div>
+<div class="j">
+  <ul>
+    <li><b>選択:</b> <kbd>Ctrl</kbd>+クリックまたは <kbd>X</kbd> で 1 つずつ、<kbd>Shift</kbd>+クリックで範囲、マウスを押したままなぞると複数セル。<kbd>Ctrl+A</kbd> はこのページすべてです。選択中は、チェック・メモ・削除が選択したすべての画像に適用されます。</li>
+    <li><b>一括合格 (<kbd>P</kbd>):</b> チェックのない「未確認」の画像をまとめて確認済み(合格)にします。選択したもの、現在のページまで、リスト全体から選びます。</li>
+    <li><b>削除 (<kbd>Del</kbd>):</b> Windows のごみ箱に送ります。ごみ箱から復元でき、削除前のチェックは書き出し結果に残ります。</li>
+  </ul>
+</div>
+</section>
+
+<section id="censor">
+<h2><span class="k">6. 검열 덧칠</span><span class="e">6. Censor touch-up</span><span class="j">6. 修正加筆</span></h2>
+<div class="k">
+  <p>그림은 좋은데 검열만 약한 컷을 다시 뽑지 않고 그 자리에서 고칩니다. 칸에서 <kbd>E</kbd>를 누르면 편집 화면이 열립니다.</p>
+  <ul>
+    <li><kbd>1</kbd> 블러 · <kbd>2</kbd> 모자이크 · <kbd>3</kbd> 먹칠, <kbd>B</kbd> 브러시 · <kbd>R</kbd> 사각형, <kbd>[</kbd> <kbd>]</kbd> 굵기, <kbd>Shift</kbd>+휠 세기</li>
+    <li><kbd>Space</kbd>를 누르고 있으면 원본과 비교, <kbd>Ctrl+Z</kbd> 마지막 획 되돌리기</li>
+    <li><kbd>Enter</kbd> 저장, <kbd>Shift+Enter</kbd> 저장하고 다음 "검열 약함" 컷 열기, <kbd>Esc</kbd> 취소</li>
+  </ul>
+  <p>저장하면 <b>같은 파일에 덮어쓰고</b>, 그 컷의 "검열 약함" 체크가 풀려 합격이 됩니다. 처음 덧칠할 때 원본을 뷰어의 <code>data</code> 폴더에 한 번 보관하므로, 다시 <kbd>E</kbd>로 열어 <b>원본 복원</b>을 누르면 되돌릴 수 있습니다. 이미지에 들어 있는 생성 정보(프롬프트·seed)는 그대로 남습니다.</p>
+  <p class="note">먼저 <kbd>9</kbd>로 훑으며 체크해 두고, 첫 컷에서 <kbd>E</kbd> → 칠하기 → <kbd>Shift+Enter</kbd>를 반복하면 체크한 컷을 차례로 고칠 수 있습니다.</p>
+</div>
+<div class="e">
+  <p>Fix an image that is fine except for weak censoring, on the spot and without regenerating it. Press <kbd>E</kbd> on a cell to open the editor.</p>
+  <ul>
+    <li><kbd>1</kbd> blur · <kbd>2</kbd> mosaic · <kbd>3</kbd> black fill, <kbd>B</kbd> brush · <kbd>R</kbd> rectangle, <kbd>[</kbd> <kbd>]</kbd> size, <kbd>Shift</kbd>+wheel strength</li>
+    <li>Hold <kbd>Space</kbd> to compare with the original, <kbd>Ctrl+Z</kbd> to undo the last stroke</li>
+    <li><kbd>Enter</kbd> save, <kbd>Shift+Enter</kbd> save and open the next "Weak censoring" image, <kbd>Esc</kbd> cancel</li>
+  </ul>
+  <p>Saving <b>overwrites the same file</b> and clears that image's "Weak censoring" mark, so it becomes a pass. The first time you touch up a file, the original is kept once in the viewer's <code>data</code> folder; open the image with <kbd>E</kbd> again and press <b>Restore original</b> to go back. The generation info inside the image (prompt, seed) is preserved.</p>
+  <p class="note">Skim first and mark with <kbd>9</kbd>; then on the first image press <kbd>E</kbd> → paint → <kbd>Shift+Enter</kbd>, and repeat to fix the marked images one after another.</p>
+</div>
+<div class="j">
+  <p>絵は良いのに修正だけが弱い画像を、再生成せずにその場で直します。セルで <kbd>E</kbd> を押すと編集画面が開きます。</p>
+  <ul>
+    <li><kbd>1</kbd> ぼかし · <kbd>2</kbd> モザイク · <kbd>3</kbd> 黒塗り、<kbd>B</kbd> ブラシ · <kbd>R</kbd> 矩形、<kbd>[</kbd> <kbd>]</kbd> 太さ、<kbd>Shift</kbd>+ホイール 強さ</li>
+    <li><kbd>Space</kbd> を押している間は元画像と比較、<kbd>Ctrl+Z</kbd> で最後のストロークを取り消し</li>
+    <li><kbd>Enter</kbd> 保存、<kbd>Shift+Enter</kbd> 保存して次の「修正が弱い」画像を開く、<kbd>Esc</kbd> キャンセル</li>
+  </ul>
+  <p>保存すると<b>同じファイルに上書き</b>され、その画像の「修正が弱い」チェックが外れて合格になります。最初に加筆するとき、元画像をビューアの <code>data</code> フォルダに一度だけ保管するので、もう一度 <kbd>E</kbd> で開いて <b>元画像に戻す</b> を押せば戻せます。画像に含まれる生成情報(プロンプト・seed)はそのまま残ります。</p>
+  <p class="note">先に <kbd>9</kbd> でチェックしながら見て、最初の画像で <kbd>E</kbd> → 塗る → <kbd>Shift+Enter</kbd> を繰り返すと、チェックした画像を順番に直せます。</p>
+</div>
+</section>
+
+<section id="export">
+<h2><span class="k">7. 결과 내보내기</span><span class="e">7. Export</span><span class="j">7. 書き出し</span></h2>
+<div class="k">
+  <p><b>⇩ 내보내기</b>(<kbd>Ctrl+E</kbd>)를 누르면 지금 폴더 안 <code>_review</code>에 두 파일이 생깁니다.</p>
+  <ul>
+    <li><code>review-latest.md</code> — 사람이 읽기 좋은 요약: 불합격 목록(사유·메모·seed), 세트 대표, 추가 생산 요청, 삭제한 파일</li>
+    <li><code>review-latest.json</code> — 같은 내용을 프로그램·LLM이 읽기 좋은 형태로. 불합격 컷의 프롬프트 원문도 들어 있습니다</li>
+  </ul>
+  <p>내보내기 창에서 요약이나 불합격 파일명 목록을 바로 복사할 수도 있습니다. 아직 안 본 이미지는 "판정 없음"으로 나가므로, 합격으로 넘기려면 <kbd>P</kbd> 일괄 합격을 먼저 쓰세요.</p>
+</div>
+<div class="e">
+  <p>Press <b>⇩ Export</b> (<kbd>Ctrl+E</kbd>) to write two files into <code>_review</code> inside the current folder.</p>
+  <ul>
+    <li><code>review-latest.md</code> — a readable summary: the reject list (reasons, notes, seeds), set picks, make-more requests, deleted files</li>
+    <li><code>review-latest.json</code> — the same content for programs and LLMs, including the full prompts of rejected images</li>
+  </ul>
+  <p>You can also copy the summary or the list of rejected filenames straight from the export dialog. Images you have not seen are exported with "no verdict"; to pass them, use <kbd>P</kbd> Pass all first.</p>
+</div>
+<div class="j">
+  <p><b>⇩ 書き出し</b>(<kbd>Ctrl+E</kbd>)を押すと、現在のフォルダ内の <code>_review</code> に 2 つのファイルが作られます。</p>
+  <ul>
+    <li><code>review-latest.md</code> — 人が読みやすい要約: 不合格のリスト(理由・メモ・seed)、セット代表、追加生産の依頼、削除したファイル</li>
+    <li><code>review-latest.json</code> — 同じ内容をプログラムや LLM が読みやすい形で。不合格画像のプロンプト原文も含まれます</li>
+  </ul>
+  <p>書き出しのダイアログから、要約や不合格ファイル名のリストをそのままコピーすることもできます。まだ見ていない画像は「判定なし」で書き出されるので、合格にするには先に <kbd>P</kbd> 一括合格を使ってください。</p>
+</div>
+</section>
+
+<section id="llm">
+<h2><span class="k">8. LLM 연결 (선택)</span><span class="e">8. Connect an LLM (optional)</span><span class="j">8. LLM 接続 (任意)</span></h2>
+<div class="k">
+  <p>뷰어는 혼자서 완결됩니다. Claude Code나 Codex 같은 코딩 에이전트를 쓰고 있다면, 아래 프롬프트를 한 번 붙여 넣는 것으로 "검수 결과를 읽고 불합격 컷을 다시 뽑는" 흐름에 연결할 수 있습니다.</p>
+  <ol class="steps">
+    <li>설치 폴더의 <b>Copy-LLM-Prompt.bat</b>을 더블클릭합니다. 이 PC의 실제 경로가 들어간 연결 프롬프트가 클립보드에 복사됩니다.</li>
+    <li>Claude Code·Codex 대화창에 붙여 넣고 보냅니다. 에이전트가 자기 지침 파일(CLAUDE.md / AGENTS.md)에 뷰어 사용법을 적어 둡니다.</li>
+    <li>이후에는 검수를 마치고 "검수 끝났어"라고 말하면 됩니다.</li>
+  </ol>
+  <p>bat을 쓰지 않으려면 아래에 설치 폴더 경로를 넣고 복사하세요.</p>
+</div>
+<div class="e">
+  <p>The viewer is complete on its own. If you use a coding agent such as Claude Code or Codex, pasting the prompt below once connects it to a "read the review results and regenerate the rejects" workflow.</p>
+  <ol class="steps">
+    <li>Double-click <b>Copy-LLM-Prompt.bat</b> in the install folder. A connection prompt containing this PC's real paths is copied to the clipboard.</li>
+    <li>Paste it into your Claude Code or Codex chat and send it. The agent writes how to use the viewer into its own instruction file (CLAUDE.md / AGENTS.md).</li>
+    <li>From then on, finish a review and just say "review done".</li>
+  </ol>
+  <p>If you prefer not to use the bat, enter the install folder path below and copy.</p>
+</div>
+<div class="j">
+  <p>ビューアは単体で完結します。Claude Code や Codex などのコーディングエージェントを使っている場合は、下のプロンプトを一度貼り付けるだけで「検品結果を読んで不合格の画像を再生成する」流れに接続できます。</p>
+  <ol class="steps">
+    <li>インストールフォルダの <b>Copy-LLM-Prompt.bat</b> をダブルクリックします。この PC の実際のパスが入った接続プロンプトがクリップボードにコピーされます。</li>
+    <li>Claude Code・Codex のチャットに貼り付けて送信します。エージェントが自分の指示ファイル(CLAUDE.md / AGENTS.md)にビューアの使い方を書き込みます。</li>
+    <li>以後は、検品を終えて「検品終わった」と伝えるだけです。</li>
+  </ol>
+  <p>bat を使わない場合は、下にインストールフォルダのパスを入力してコピーしてください。</p>
+</div>
+<div class="prompt">
+  <input id="dir" value="C:\NAI-Review-Viewer" spellcheck="false" aria-label="Install folder">
+  <textarea id="ptext" readonly spellcheck="false"></textarea>
+  <button id="pcopy"><span class="k">프롬프트 복사</span><span class="e">Copy prompt</span><span class="j">プロンプトをコピー</span></button>
+</div>
+<p>
+  <span class="k">에이전트가 참고하는 상세 문서는 설치 폴더의 <code>LLM-CONNECT.md</code>입니다(명령, 판정 규칙, JSON 필드).</span>
+  <span class="e">The detailed reference the agent reads is <code>LLM-CONNECT.md</code> in the install folder (commands, verdict rules, JSON fields).</span>
+  <span class="j">エージェントが参照する詳細文書は、インストールフォルダの <code>LLM-CONNECT.md</code> です(コマンド、判定ルール、JSON フィールド)。</span>
+</p>
+</section>
+
+<section id="config">
+<h2><span class="k">9. 설정 · 업데이트 · 삭제</span><span class="e">9. Settings · update · uninstall</span><span class="j">9. 設定・アップデート・アンインストール</span></h2>
+<div class="k">
+  <ul>
+    <li><b>화면 설정(⚙):</b> 언어, 체크 후 자동으로 다음 칸, 칸 배경, 썸네일 화질, 삭제 확인 등.</li>
+    <li><b>체크 항목 바꾸기:</b> 설치 폴더의 <code>config.json</code>을 <code>config.local.json</code>으로 복사해서 고치세요. 이 파일이 있으면 그쪽을 쓰고, 업데이트해도 덮어쓰이지 않습니다. 사유의 이름·키·색·LLM용 해설을 바꾸거나 항목을 더할 수 있습니다(고친 뒤 뷰어 재시작).</li>
+    <li><b>포트:</b> 기본 8765. 다른 프로그램과 겹치면 같은 파일의 <code>port</code>를 바꿉니다.</li>
+    <li><b>업데이트:</b> 새 버전 zip을 풀고, 이전 폴더의 <code>data</code> 폴더(검수 기록·덧칠 원본)와 <code>config.local.json</code>을 새 폴더로 옮깁니다.</li>
+    <li><b>삭제:</b> 설치 폴더를 지우면 됩니다. 썸네일 캐시는 <code>%LOCALAPPDATA%\nai-review-viewer</code>에 있으며 지워도 됩니다.</li>
+  </ul>
+  <p class="note">검수 기록은 파일의 <b>전체 경로</b>를 기준으로 저장됩니다. 검수한 이미지를 뷰어 밖에서 옮기거나 이름을 바꾸면 그 이미지의 체크는 이어지지 않습니다.</p>
+</div>
+<div class="e">
+  <ul>
+    <li><b>Display settings (⚙):</b> language, auto-advance after marking, cell background, thumbnail quality, delete confirmation and more.</li>
+    <li><b>Changing the reasons:</b> copy <code>config.json</code> in the install folder to <code>config.local.json</code> and edit the copy. When that file exists it is used instead, and updates never overwrite it. You can change each reason's name, key, color and LLM hint, or add reasons (restart the viewer afterwards).</li>
+    <li><b>Port:</b> 8765 by default. If it clashes with another program, change <code>port</code> in the same file.</li>
+    <li><b>Updating:</b> extract the new zip, then move the <code>data</code> folder (review records and touch-up originals) and <code>config.local.json</code> from the old folder into the new one.</li>
+    <li><b>Uninstalling:</b> delete the install folder. The thumbnail cache is in <code>%LOCALAPPDATA%\nai-review-viewer</code> and can be deleted too.</li>
+  </ul>
+  <p class="note">Review records are stored by each file's <b>full path</b>. If you move or rename reviewed images outside the viewer, their marks do not follow.</p>
+</div>
+<div class="j">
+  <ul>
+    <li><b>表示設定(⚙):</b> 言語、チェック後に自動で次のセルへ、セル背景、サムネイル画質、削除の確認など。</li>
+    <li><b>チェック項目の変更:</b> インストールフォルダの <code>config.json</code> を <code>config.local.json</code> にコピーして編集してください。このファイルがあるとそちらが使われ、アップデートしても上書きされません。理由の名前・キー・色・LLM 向けの解説を変えたり、項目を追加したりできます(編集後にビューアを再起動)。</li>
+    <li><b>ポート:</b> 既定は 8765。他のプログラムと重なる場合は同じファイルの <code>port</code> を変更します。</li>
+    <li><b>アップデート:</b> 新しい zip を展開し、古いフォルダの <code>data</code> フォルダ(検品記録・加筆前の元画像)と <code>config.local.json</code> を新しいフォルダに移します。</li>
+    <li><b>アンインストール:</b> インストールフォルダを削除します。サムネイルのキャッシュは <code>%LOCALAPPDATA%\nai-review-viewer</code> にあり、削除してかまいません。</li>
+  </ul>
+  <p class="note">検品記録はファイルの<b>フルパス</b>を基準に保存されます。検品した画像をビューアの外で移動・改名すると、その画像のチェックは引き継がれません。</p>
+</div>
+</section>
+
+<section id="help">
+<h2><span class="k">10. 문제 해결</span><span class="e">10. Troubleshooting</span><span class="j">10. 困ったとき</span></h2>
+<div class="tw"><table>
+<tr><th><span class="k">증상</span><span class="e">Symptom</span><span class="j">症状</span></th><th><span class="k">해결</span><span class="e">Fix</span><span class="j">対処</span></th></tr>
+<tr><td><span class="k">bat을 눌러도 바로 꺼짐</span><span class="e">The bat closes at once</span><span class="j">bat がすぐ閉じる</span></td><td><span class="k">zip 안에서 바로 실행하지 말고 먼저 압축을 풉니다. 소스로 받았다면 Install.bat을 먼저 실행합니다.</span><span class="e">Extract the zip first instead of running from inside it. If you got the source, run Install.bat first.</span><span class="j">zip の中から直接実行せず、先に展開します。ソースで入手した場合は先に Install.bat を実行します。</span></td></tr>
+<tr><td><span class="k">창이 안 열림</span><span class="e">No window opens</span><span class="j">ウィンドウが開かない</span></td><td><span class="k">브라우저 주소창에 <code>http://127.0.0.1:8765</code>를 직접 입력합니다. Edge가 없으면 기본 브라우저의 탭으로 열립니다.</span><span class="e">Type <code>http://127.0.0.1:8765</code> into a browser's address bar. Without Edge, the viewer opens as a tab in your default browser.</span><span class="j">ブラウザのアドレスバーに <code>http://127.0.0.1:8765</code> を直接入力します。Edge がない場合は既定のブラウザのタブで開きます。</span></td></tr>
+<tr><td><span class="k">포트 오류로 시작 실패</span><span class="e">Fails to start with a port error</span><span class="j">ポートのエラーで起動しない</span></td><td><span class="k">다른 프로그램이 8765를 쓰고 있습니다. <a href="#config">설정</a>의 포트 변경을 따릅니다.</span><span class="e">Another program is using 8765. Change the port as described under <a href="#config">Settings</a>.</span><span class="j">他のプログラムが 8765 を使っています。<a href="#config">設定</a>のポート変更に従ってください。</span></td></tr>
+<tr><td><span class="k">프롬프트·seed가 안 보임</span><span class="e">No prompt or seed shown</span><span class="j">プロンプト・seed が表示されない</span></td><td><span class="k">이미지에 생성 정보가 들어 있지 않은 경우입니다(다른 프로그램을 거치며 지워진 파일 등). 검수 자체는 그대로 할 수 있습니다.</span><span class="e">The image carries no generation info (for example, it was stripped by another program). Reviewing still works.</span><span class="j">画像に生成情報が含まれていない場合です(他のプログラムを通して消えたファイルなど)。検品自体はそのまま行えます。</span></td></tr>
+<tr><td><span class="k">Install.bat 실패</span><span class="e">Install.bat fails</span><span class="j">Install.bat が失敗する</span></td><td><span class="k">인터넷 연결을 확인하고 다시 실행합니다. 회사·학교 네트워크에서 python.org / pypi.org가 막혀 있으면 Releases의 zip을 쓰세요.</span><span class="e">Check your internet connection and run it again. If python.org / pypi.org are blocked on your network, use the zip from Releases instead.</span><span class="j">インターネット接続を確認して再実行します。ネットワークで python.org / pypi.org が遮断されている場合は Releases の zip を使ってください。</span></td></tr>
+</table></div>
+</section>
+
+<footer>
+  NAI Review Viewer · <span class="k">만든 사람</span><span class="e">by</span><span class="j">作者</span> 불프하르트 · MIT License<br>
+  <span class="k">NovelAI와는 관계없는 개인 제작 도구입니다.</span><span class="e">An independent tool, not affiliated with NovelAI.</span><span class="j">NovelAI とは関係のない個人制作のツールです。</span>
+</footer>
+</main>
+<script>
+(function () {
+  var T = {
+    ko: 'NAI 검수 뷰어(사람이 이미지를 눈으로 검수하는 로컬 앱)를 이 작업 환경에 연결해 줘.\n\n1. 먼저 이 문서를 읽어: {doc}\n2. 네가 매 세션 읽는 지침 파일에 「NAI 검수 뷰어」 절을 추가해 줘. Claude Code면 CLAUDE.md, Codex면 AGENTS.md이고, 지금 프로젝트에 없으면 사용자 전역 지침 파일에 넣어. 내용은 10줄 이내로 다음만 적어.\n   - 뷰어 열기: "{py}" "{script}" "<이미지 폴더>"\n   - 검수 결과 읽기: "{py}" "{script}" export "<이미지 폴더>" --print json\n   - 판정 규칙 요약: 체크 없이 본 것 = 합격, 부정 사유 = 불합격(재생성), ★대표 세트의 나머지 = 세트 탈락(재생성 불필요), +추가 = 합격 + 추가 생산, 안 본 것 = 판정 없음, 검열 덧칠한 것 = 재생성 불필요\n   - 상세 규칙과 JSON 필드는 {doc} 참조\n3. 다음 명령이 도는지 확인해 줘: "{py}" "{script}" export --help\n4. 어느 파일에 무엇을 추가했는지 알려 줘.\n\n앞으로 내가 "검수 끝났어"라고 하면 검수 결과를 읽고, 불합격 컷을 사유별로 정리한 다음 어떻게 고쳐 다시 뽑을지 제안해 줘. 이미지 파일을 지우거나 덮어쓰는 일은 내가 시킬 때만 해.\n',
+    en: 'Please connect NAI Review Viewer (a local app where a person reviews images by eye) to this working environment.\n\n1. First read this document: {doc}\n2. Add an "NAI Review Viewer" section to the instruction file you read every session. That is CLAUDE.md for Claude Code and AGENTS.md for Codex; if this project has none, use my user-level instruction file. Keep it within 10 lines and include only:\n   - Open the viewer: "{py}" "{script}" "<image folder>"\n   - Read the review results: "{py}" "{script}" export "<image folder>" --print json\n   - Verdict rules in brief: seen with no mark = pass, negative reason = reject (regenerate), the rest of a set with a ★ pick = dropped from set (no regeneration), +more = pass and make more, unseen = no verdict, censor-touched = no regeneration needed\n   - For the detailed rules and JSON fields, see {doc}\n3. Check that this command runs: "{py}" "{script}" export --help\n4. Tell me which file you changed and what you added.\n\nFrom now on, when I say "review done", read the review results, group the rejected images by reason, and propose how to fix and regenerate them. Delete or overwrite image files only when I ask you to.\n',
+    ja: 'NAI 検品ビューア(人が画像を目で検品するローカルアプリ)をこの作業環境に接続してください。\n\n1. まずこの文書を読んでください: {doc}\n2. あなたが毎セッション読む指示ファイルに「NAI 検品ビューア」の節を追加してください。Claude Code なら CLAUDE.md、Codex なら AGENTS.md で、このプロジェクトになければユーザー全体の指示ファイルに入れてください。内容は 10 行以内で、次の項目だけにしてください。\n   - ビューアを開く: "{py}" "{script}" "<画像フォルダ>"\n   - 検品結果を読む: "{py}" "{script}" export "<画像フォルダ>" --print json\n   - 判定ルールの要約: チェックなしの確認済み = 合格、否定の理由 = 不合格(再生成)、★代表があるセットの残り = セット落ち(再生成不要)、+追加 = 合格 + 追加生産、未確認 = 判定なし、修正を加筆したもの = 再生成不要\n   - 詳しいルールと JSON のフィールドは {doc} を参照\n3. 次のコマンドが動くか確認してください: "{py}" "{script}" export --help\n4. どのファイルに何を追加したか教えてください。\n\n今後、私が「検品終わった」と言ったら、検品結果を読み、不合格の画像を理由別に整理して、どう直して再生成するかを提案してください。画像ファイルの削除や上書きは、私が頼んだときだけ行ってください。\n'
+  };
+  var root = document.documentElement, dir = document.getElementById('dir'), out = document.getElementById('ptext');
+  function fill() {
+    var d = dir.value.trim().replace(/[\\\/]+$/, '');
+    out.value = T[root.dataset.lang].split('{py}').join(d + '\\runtime\\python.exe')
+      .split('{script}').join(d + '\\review_viewer.py').split('{doc}').join(d + '\\LLM-CONNECT.md');
+  }
+  function setLang(l) {
+    root.dataset.lang = l; root.lang = l;
+    document.querySelectorAll('.lang button').forEach(function (b) { b.setAttribute('aria-pressed', b.dataset.set === l); });
+    try { localStorage.setItem('nrv-guide-lang', l); } catch (e) { /* storage unavailable */ }
+    fill();
+  }
+  var saved = null;
+  try { saved = localStorage.getItem('nrv-guide-lang'); } catch (e) { /* storage unavailable */ }
+  var nav = (navigator.language || 'en').slice(0, 2);
+  setLang(T[saved] ? saved : T[nav] ? nav : 'en');
+  document.querySelectorAll('.lang button').forEach(function (b) { b.onclick = function () { setLang(b.dataset.set); }; });
+  dir.oninput = fill;
+  document.getElementById('pcopy').onclick = function () {
+    out.select();
+    (navigator.clipboard ? navigator.clipboard.writeText(out.value) : Promise.reject()).catch(function () { document.execCommand('copy'); });
+  };
+})();
+</script>
+</body>
+</html>

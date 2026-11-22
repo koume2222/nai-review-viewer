@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NAI 검수 뷰어</title>
+<link rel="stylesheet" href="/app.css">
+</head>
+<body data-bg="dark">
+<header id="top">
+  <div class="grp">
+    <button id="btnRoot" class="ico" title="폴더 열기 (Ctrl+O)">📁</button>
+    <span id="rootLabel" class="path" title="클릭하면 경로 복사"></span>
+    <button id="btnRescan" class="ico" title="다시 읽기 (F5)">⟳</button>
+  </div>
+  <div class="grow"></div>
+  <div class="grp">
+    <select id="selMode" title="보기 (V · + · −)"></select>
+    <select id="selFilter" title="필터"></select>
+    <select id="selSort" title="정렬">
+      <option value="name">이름순</option>
+      <option value="mtime_asc">오래된 순</option>
+      <option value="mtime_desc">최신 순</option>
+      <option value="size_desc">용량 큰 순</option>
+    </select>
+    <input id="search" type="search" placeholder="파일명 · p:프롬프트 ( / )" title="파일명 검색. p:로 시작하면 NAI 프롬프트 검색(쉼표 = 그리고, -태그 = 제외, Enter로 실행)">
+  </div>
+  <div class="grp">
+    <button id="btnPass" title="안 본 것 일괄 합격 (P)">✔ 일괄 합격</button>
+    <button id="btnExport" class="primary" title="검수 결과 내보내기 (Ctrl+E)">⇩ 내보내기</button>
+  </div>
+  <div class="grp">
+    <button id="btnNames" class="ico" title="파일명 표시 (F)">Aa</button>
+    <button id="btnTree" class="ico" title="폴더 트리 (B)">🗂</button>
+    <button id="btnInfo" class="ico" title="정보 패널 (I)">ⓘ</button>
+    <button id="btnSettings" class="ico" title="설정">⚙</button>
+    <button id="btnHelp" class="ico" title="단축키 (H)">?</button>
+  </div>
+</header>
+<div id="prog"><div class="seen"></div><div class="rej"></div></div>
+<div id="body">
+  <aside id="tree"></aside>
+  <main id="stage">
+    <div id="grid"></div>
+    <div id="empty" hidden></div>
+    <div id="selbar" hidden></div>
+  </main>
+  <aside id="info" hidden></aside>
+</div>
+<footer id="bottom">
+  <div id="palette"></div>
+  <div id="status"></div>
+</footer>
+<div id="peek" hidden><img alt=""><div class="cap"></div></div>
+<div id="ctx" hidden></div>
+<div id="cedit" hidden></div>
+<div id="modal" hidden><div class="box"></div></div>
+<div id="toast"></div>
+<script src="/app.js"></script>
+</body>
+</html>

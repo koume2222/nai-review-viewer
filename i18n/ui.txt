@@ -1,0 +1,1159 @@
+;; 화면 문구 사전. 세 줄이 한 묶음(한국어 원문 / English / 日本語), 묶음 사이는 빈 줄.
+;; 원문은 static/app.js·index.html에 있는 글자 그대로다(${...} 포함). 서버가 긴 원문부터 차례로 바꿔서 내보낸다.
+;; 점검: python tools/check_i18n.py
+
+lang="ko"
+lang="en"
+lang="ja"
+
+'ko-KR'
+'en-US'
+'ja-JP'
+
+NAI 검수 뷰어 · 만든 사람 불프하르트 · 자세한 사용법은 설치 폴더의 Guide.html
+NAI Review Viewer · by 불프하르트 · see Guide.html in the install folder for details
+NAI 検品ビューア · 作者 불프하르트 · 詳しい使い方はインストールフォルダの Guide.html
+
+NAI 검수 뷰어
+NAI Review Viewer
+NAI 検品ビューア
+
+폴더 열기
+Open folder
+フォルダを開く
+
+클릭하면 경로 복사
+Click to copy the path
+クリックでパスをコピー
+
+다시 읽기 (F5)
+Reload (F5)
+再読み込み (F5)
+
+보기 (V · + · −)
+View (V · + · −)
+表示 (V · + · −)
+
+"필터"
+"Filter"
+"フィルター"
+
+"정렬"
+"Sort"
+"並べ替え"
+
+"설정"
+"Settings"
+"設定"
+
+>설정<
+>Settings<
+>設定<
+
+이름순
+Name
+名前順
+
+오래된 순
+Oldest first
+古い順
+
+최신 순
+Newest first
+新しい順
+
+용량 큰 순
+Largest first
+サイズの大きい順
+
+파일명 · p:프롬프트 ( / )
+Filename · p:prompt ( / )
+ファイル名 · p:プロンプト ( / )
+
+파일명 검색. p:로 시작하면 NAI 프롬프트 검색(쉼표 = 그리고, -태그 = 제외, Enter로 실행)
+Filename search. Start with p: to search NAI prompts (comma = and, -tag = exclude, Enter to run)
+ファイル名検索。p: で始めると NAI プロンプト検索(カンマ = かつ、-タグ = 除外、Enter で実行)
+
+✔ 일괄 합격
+✔ Pass all
+✔ 一括合格
+
+검수 결과 내보내기 (Ctrl+E)
+Export review results (Ctrl+E)
+検品結果を書き出す (Ctrl+E)
+
+⇩ 내보내기
+⇩ Export
+⇩ 書き出し
+
+파일명 표시 (F)
+Show filenames (F)
+ファイル名を表示 (F)
+
+폴더 트리 (B)
+Folder tree (B)
+フォルダツリー (B)
+
+정보 패널 (I)
+Info panel (I)
+情報パネル (I)
+
+단축키
+Shortcuts
+ショートカット
+
+'1장'
+'1'
+'1枚'
+
+장 (
+ (
+枚 (
+
+장)
+)
+枚)
+
+세트별 (같은 씬 묶음)
+By set (same-scene group)
+セット別 (同じシーンのまとまり)
+
+'전체'
+'All'
+'すべて'
+
+안 본 것
+Unseen
+未確認
+
+본 것
+Seen
+確認済み
+
+'체크 없음'
+'Unmarked'
+'チェックなし'
+
+체크한 것 전부
+All marked
+チェックありすべて
+
+불합격 (재생성)
+Rejected (regenerate)
+不合格 (再生成)
+
+세트 탈락
+Dropped from set
+セット落ち
+
+★ 세트 대표
+★ Set pick
+★ セット代表
+
++ 추가 생산
++ Make more
++ 追加生産
+
+메모 있음
+Has note
+メモあり
+
+파일 바뀜 (이전 체크)
+File changed (old marks)
+ファイル変更 (以前のチェック)
+
+여러 장 세트만
+Multi-image sets only
+複数枚のセットのみ
+
+🩹 검열 덧칠한 것
+🩹 Censor touch-ups
+🩹 修正を加筆したもの
+
+사유:
+Reason:
+理由:
+
+</kbd>메모<
+</kbd>Note<
+</kbd>メモ<
+
+</kbd>해제<
+</kbd>Clear<
+</kbd>解除<
+
+블러·모자이크·먹칠을 덧칠해 저장(재생성 없이 검열 보강)
+Paint blur, mosaic or black fill and save (stronger censoring without regenerating)
+ぼかし・モザイク・黒塗りを上塗りして保存(再生成せずに修正を補強)
+
+</kbd>검열 덧칠<
+</kbd>Censor touch-up<
+</kbd>修正加筆<
+
+</kbd>삭제<
+</kbd>Delete<
+</kbd>削除<
+
+📋 목록 ${S.files.length}장 ·
+📋 List · ${S.files.length} images ·
+📋 リスト ${S.files.length}枚 ·
+
+목록 모드:
+List mode:
+リストモード:
+
+검수 — 목록 ${S.files.length}장
+Review — list of ${S.files.length}
+検品 — リスト ${S.files.length}枚
+
+검수 —
+Review —
+検品 —
+
+📁로 검수할 폴더를 여세요.
+Open a folder to review with 📁.
+📁 で検品するフォルダを開いてください。
+
+조건에 맞는 이미지가 없습니다.\n필터·검색·폴더 범위를 확인하세요.
+No images match.\nCheck the filter, search and folder scope.
+条件に合う画像がありません。\nフィルター・検索・フォルダ範囲を確認してください。
+
+이 폴더에 이미지가 없습니다.
+This folder has no images.
+このフォルダに画像がありません。
+
+아직 안 봄
+Not seen yet
+まだ未確認
+
+체크 뒤 파일이 바뀌어 이전 체크는 무시됩니다:
+The file changed after marking, so the old marks are ignored:
+チェック後にファイルが変わったため、以前のチェックは無視されます:
+
+파일 바뀜
+File changed
+ファイル変更
+
+뷰어에서 검열을 덧칠해 저장한 파일 — E로 다시 열면 원본 복원 가능
+Censor touch-up saved in the viewer — press E again to restore the original
+ビューアで修正を加筆して保存したファイル — E で開き直すと元画像に戻せます
+
+🩹 덧칠
+🩹 Touched
+🩹 加筆
+
+선택 ${S.sel.size}장에 적용:
+Apply to ${S.sel.size} selected:
+選択 ${S.sel.size}枚に適用:
+
+현재 칸:
+Current cell:
+現在のセル:
+
+<b>${S.sel.size}장 선택</b> (이 페이지 ${onPage}) · 체크 키 = 전부에 적용 · Del 삭제 · P 합격 · Esc 해제
+<b>${S.sel.size} selected</b> (${onPage} on this page) · mark keys apply to all · Del delete · P pass · Esc clear
+<b>${S.sel.size}枚選択</b> (このページ ${onPage}) · チェックキー = すべてに適用 · Del 削除 · P 合格 · Esc 解除
+
+페이지 이동
+Go to page
+ページ移動
+
+'세트'
+'Set'
+'セット'
+
+'페이지'
+'Page'
+'ページ'
+
+ · 표시 ${total}장
+ · showing ${total}
+ · 表示 ${total}枚
+
+프롬프트 "
+prompt "
+プロンプト "
+
+불합격 ${
+Rejected ${
+不合格 ${
+
++추가 ${
++more ${
++追加 ${
+
+"s">선택
+"s">selected
+"s">選択
+
+본 것 기록 실패:
+Could not record as seen:
+確認済みの記録に失敗:
+
+뒤쪽에 안 본 이미지가 없습니다.
+No unseen images after this point.
+この先に未確認の画像はありません。
+
+목록 전체 ${S.sel.size}장 선택
+Selected all ${S.sel.size} in the list
+リスト全体 ${S.sel.size}枚を選択
+
+저장 실패:
+Save failed:
+保存に失敗:
+
+장: ${t.label} ${allOn ? '해제' : '체크'}
+ images: ${t.label} ${allOn ? 'off' : 'on'}
+枚: ${t.label} ${allOn ? '解除' : 'チェック'}
+
+장 체크 해제
+ images: marks cleared
+枚のチェックを解除
+
+되돌릴 것이 없습니다.
+Nothing to undo.
+元に戻すものがありません。
+
+되돌림: 체크 ${changes.length}장
+Undone: marks on ${changes.length} images
+元に戻しました: チェック ${changes.length}枚
+
+되돌림: ${u.value ? '합격(본 것) 처리' : '안 본 것 처리'} ${files.length}장
+Undone: ${u.value ? 'mark as passed (seen)' : 'mark as unseen'} · ${files.length} images
+元に戻しました: ${u.value ? '合格(確認済み)にする' : '未確認にする'} ${files.length}枚
+
+장에 같은 메모
+ images: same note
+枚に同じメモ
+
+<h2>메모 —
+<h2>Note —
+<h2>メモ —
+
+불합격 사유나 수정 방향 (LLM이 그대로 읽습니다)
+Why it fails or how to fix it (the LLM reads this as written)
+不合格の理由や修正の方向 (LLM がそのまま読みます)
+
+ — 지금은 장마다 메모가 달라 비워 둠
+ — left blank because the notes differ per image
+ — 画像ごとにメモが違うため空欄
+
+Enter 저장 · Shift+Enter 줄바꿈 · Esc 취소
+Enter save · Shift+Enter new line · Esc cancel
+Enter 保存 · Shift+Enter 改行 · Esc キャンセル
+
+>취소<
+>Cancel<
+>キャンセル<
+
+>저장<
+>Save<
+>保存<
+
+`폴더 ${S.sub}`
+`folder ${S.sub}`
+`フォルダ ${S.sub}`
+
+'전체 폴더'
+'whole folder'
+'フォルダ全体'
+
+필터 "
+filter "
+フィルター "
+
+검색 "
+search "
+検索 "
+
+${n}장</b>
+${n}</b>
+${n}枚</b>
+
+안 본 것 일괄 합격
+Pass all unseen
+未確認を一括合格
+
+체크 없이 '본 것'으로 기록하면 합격으로 칩니다. 이미 체크한 이미지는 체크가 그대로 유지됩니다.
+Images recorded as seen without a mark count as passed. Images you already marked keep their marks.
+チェックなしで「確認済み」と記録すると合格扱いになります。チェック済みの画像のチェックはそのまま残ります。
+
+선택한 이미지 중 안 본 것
+Unseen among the selected images
+選択した画像のうち未確認
+
+처음부터 지금 페이지(${S.page + 1})까지 안 본 것
+Unseen from the start through this page (${S.page + 1})
+最初から現在のページ(${S.page + 1})までの未確認
+
+지금 목록 전체에서 안 본 것 (
+Unseen in the whole current list (
+現在のリスト全体の未確認 (
+
+Enter 실행 · Ctrl+Z로 되돌리기
+Enter run · Ctrl+Z to undo
+Enter 実行 · Ctrl+Z で元に戻す
+
+>합격 처리<
+>Mark as passed<
+>合格にする<
+
+처리할 이미지가 없습니다.
+Nothing to process.
+処理する画像がありません。
+
+장 합격(본 것) 처리 — Ctrl+Z로 되돌리기
+ images marked as passed (seen) — Ctrl+Z to undo
+枚を合格(確認済み)にしました — Ctrl+Z で元に戻す
+
+<h2>휴지통으로 보내기 — ${ts.length}장</h2>
+<h2>Send to Recycle Bin — ${ts.length} images</h2>
+<h2>ごみ箱に送る — ${ts.length}枚</h2>
+
+<br>… 외 ${ts.length - 12}장
+<br>… and ${ts.length - 12} more
+<br>… ほか ${ts.length - 12}枚
+
+⚠ NAIS3가 관리하는 폴더의 파일이 있습니다. 여기서 지우면 NAIS3 화면에는 깨진 항목으로 남을 수 있습니다.
+⚠ Some files are in a folder managed by NAIS3. Deleting them here may leave broken entries in NAIS3.
+⚠ NAIS3 が管理するフォルダのファイルが含まれています。ここで削除すると NAIS3 の画面に壊れた項目が残ることがあります。
+
+Windows 휴지통에서 복원할 수 있습니다. 삭제 전 체크·메모는 내보내기의 '삭제한 파일'에 남습니다.
+You can restore them from the Windows Recycle Bin. Marks and notes made before deletion stay under "Deleted files" in the export.
+Windows のごみ箱から復元できます。削除前のチェック・メモは書き出しの「削除したファイル」に残ります。
+
+ 다시 묻지 않기
+ Don't ask again
+ 次回から確認しない
+
+>휴지통으로 (Enter)<
+>Recycle (Enter)<
+>ごみ箱へ (Enter)<
+
+삭제 실패:
+Delete failed:
+削除に失敗:
+
+장을 휴지통으로 보냈습니다.
+ images sent to the Recycle Bin.
+枚をごみ箱に送りました。
+
+장은 지우지 못했습니다(사용 중이거나 취소됨):
+ images could not be deleted (in use or cancelled):
+枚は削除できませんでした(使用中またはキャンセル):
+
+선택 ${ts.length}장에 적용
+Apply to ${ts.length} selected
+選択 ${ts.length}枚に適用
+
+📝 메모…
+📝 Note…
+📝 メモ…
+
+체크 해제
+Clear marks
+チェック解除
+
+✔ 합격(본 것) 처리…
+✔ Mark as passed (seen)…
+✔ 合格(確認済み)にする…
+
+선택 해제
+Deselect
+選択解除
+
+선택에 추가
+Add to selection
+選択に追加
+
+경로 복사
+Copy path
+パスをコピー
+
+이미지 복사
+Copy image
+画像をコピー
+
+탐색기에서 보기
+Show in Explorer
+エクスプローラーで表示
+
+원본 새 창
+Open original in a new window
+元画像を新しいウィンドウで開く
+
+🩹 검열 덧칠 (블러·모자이크·먹칠)
+🩹 Censor touch-up (blur · mosaic · black fill)
+🩹 修正加筆 (ぼかし・モザイク・黒塗り)
+
+🩹 검열 덧칠
+🩹 Censor touch-up
+🩹 修正加筆
+
+🗑 휴지통으로
+🗑 Recycle
+🗑 ごみ箱へ
+
+경로 ${S.sel.size}개 복사됨
+${S.sel.size} paths copied
+パス ${S.sel.size}件をコピーしました
+
+경로 복사됨
+Path copied
+パスをコピーしました
+
+이미지 복사됨
+Image copied
+画像をコピーしました
+
+이미지 복사 실패:
+Could not copy the image:
+画像のコピーに失敗:
+
+선택된 이미지 없음
+No image selected
+画像が選択されていません
+
+<span>경로<
+<span>Path<
+<span>パス<
+
+<span>세트<
+<span>Set<
+<span>セット<
+
+<span>상태<
+<span>Status<
+<span>状態<
+
+파일 바뀜 · 이전 체크 무시
+File changed · old marks ignored
+ファイル変更 · 以前のチェックは無視
+
+<span>용량<
+<span>File size<
+<span>サイズ<
+
+<span>수정<
+<span>Modified<
+<span>更新<
+
+<span>크기<
+<span>Dimensions<
+<span>寸法<
+
+>탐색기<
+>Explorer<
+>エクスプローラー<
+
+안 본 것으로
+Mark unseen
+未確認に戻す
+
+}회)
+}×)
+}回)
+
+🗑 삭제
+🗑 Delete
+🗑 削除
+
+선택 ${S.sel.size}장 — 아래 체크는 선택 전부에 적용됩니다.
+${S.sel.size} selected — the marks below apply to all of them.
+選択 ${S.sel.size}枚 — 下のチェックは選択すべてに適用されます。
+
+<h3>체크</h3>
+<h3>Marks</h3>
+<h3>チェック</h3>
+
+<h3>메모</h3>
+<h3>Note</h3>
+<h3>メモ</h3>
+
+메모 (포커스를 벗어나면 저장 · 선택이 있어도 이 칸에만)
+Note (saved when you leave the box · applies to this cell only, even with a selection)
+メモ (フォーカスが外れると保存 · 選択中でもこのセルのみ)
+
+NAI 메타데이터
+NAI metadata
+NAI メタデータ
+
+읽는 중…
+Reading…
+読み込み中…
+
+>메타데이터<
+>Metadata<
+>メタデータ<
+
+>복사<
+>Copy<
+>コピー<
+
+'PNG 텍스트'
+'PNG text'
+'PNG テキスト'
+
+'PNG 알파(stealth)'
+'PNG alpha (stealth)'
+'PNG アルファ(stealth)'
+
+생성 정보 <
+Generation info <
+生成情報 <
+
+'해상도'
+'Resolution'
+'解像度'
+
+'모델'
+'Model'
+'モデル'
+
+'생성 시간'
+'Generation time'
+'生成時間'
+
+seed 복사
+Copy seed
+seed をコピー
+
+block('프롬프트'
+block('Prompt'
+block('プロンプト'
+
+`캐릭터 ${i + 1}`
+`Character ${i + 1}`
+`キャラクター ${i + 1}`
+
+'네거티브 (UC)'
+'Negative (UC)'
+'ネガティブ (UC)'
+
+`캐릭터 ${i + 1} 네거티브`
+`Character ${i + 1} negative`
+`キャラクター ${i + 1} ネガティブ`
+
+생성 정보 없음 (텍스트 청크·EXIF·알파 stealth 모두 비어 있음)
+No generation info (text chunks, EXIF and alpha stealth are all empty)
+生成情報なし (テキストチャンク・EXIF・アルファ stealth がすべて空)
+
+EXIF · 텍스트 청크 전체 (
+EXIF · all text chunks (
+EXIF · テキストチャンク全体 (
+
+ 하위 폴더 포함
+ Include subfolders
+ サブフォルダを含む
+
+이미지 ${d.count}장 · 안 본 것 ${uv} · 불합격 ${rj}
+${d.count} images · unseen ${uv} · rejected ${rj}
+画像 ${d.count}枚 · 未確認 ${uv} · 不合格 ${rj}
+
+검수할 폴더 열기
+Open a folder to review
+検品するフォルダを開く
+
+폴더 경로 붙여넣기 (예: C:\\Users\\...\\이미지)
+Paste a folder path (e.g. C:\\Users\\...\\images)
+フォルダのパスを貼り付け (例: C:\\Users\\...\\images)
+
+찾아보기…
+Browse…
+参照…
+
+>열기<
+>Open<
+>開く<
+
+최근 폴더
+Recent folders
+最近のフォルダ
+
+>닫기<
+>Close<
+>閉じる<
+
+>이동<
+>Go<
+>移動<
+
+내보내는 중…
+Exporting…
+書き出し中…
+
+검수 결과 내보냄
+Review results exported
+検品結果を書き出しました
+
+범위:
+Scope:
+範囲:
+
+전체 ${s.total}
+Total ${s.total}
+全体 ${s.total}
+
+ · 삭제 ${
+ · deleted ${
+ · 削除 ${
+
+안 본 이미지 ${s.unseen_unmarked}장은 판정 없음으로 나갔습니다. 합격으로 넘기려면 ✔ 일괄 합격을 쓰세요.
+${s.unseen_unmarked} unseen images were exported with no verdict. Use ✔ Pass all to pass them.
+未確認の画像 ${s.unseen_unmarked}枚は判定なしで書き出されました。合格にするには ✔ 一括合格 を使ってください。
+
+>미리보기<
+>Preview<
+>プレビュー<
+
+MD 내용 복사
+Copy MD
+MD をコピー
+
+불합격 파일명 복사 (
+Copy rejected filenames (
+不合格のファイル名をコピー (
+
+JSON 경로 복사
+Copy JSON path
+JSON のパスをコピー
+
+'MD 복사됨'
+'MD copied'
+'MD をコピーしました'
+
+불합격 ${res.regen.length}개 복사됨
+${res.regen.length} rejected filenames copied
+不合格 ${res.regen.length}件をコピーしました
+
+내보내기 실패:
+Export failed:
+書き出しに失敗:
+
+내보내기
+Export
+書き出し
+
+체크 후 자동으로 다음 칸
+Auto-advance after marking
+チェック後に自動で次のセルへ
+
+'안 함'
+'Off'
+'しない'
+
+'1장 보기에서만'
+'Single view only'
+'1枚表示のみ'
+
+'항상'
+'Always'
+'常に'
+
+칸 배경 (K)
+Cell background (K)
+セル背景 (K)
+
+'검정'
+'Black'
+'黒'
+
+'회색'
+'Gray'
+'グレー'
+
+'흰색'
+'White'
+'白'
+
+'체크무늬 (투명 확인)'
+'Checkerboard (shows transparency)'
+'市松模様 (透過確認)'
+
+'체크무늬'
+'Checkerboard'
+'市松模様'
+
+'본 것' 기록까지
+Time until recorded as seen
+「確認済み」と記録するまで
+
+초'
+ s'
+秒'
+
+썸네일 화질
+Thumbnail quality
+サムネイル画質
+
+'보통 (빠름)'
+'Normal (fast)'
+'標準 (高速)'
+
+'높게 (선명)'
+'High (sharp)'
+'高 (鮮明)'
+
+그리드에서 휠로 페이지 넘기기
+Turn pages with the wheel in grid view
+グリッドでホイールによるページ送り
+
+안 본 이미지에 주황 점 표시
+Show an orange dot on unseen images
+未確認の画像にオレンジの点を表示
+
+그냥 클릭하면 선택 해제
+A plain click clears the selection
+通常クリックで選択解除
+
+삭제 전에 확인
+Confirm before deleting
+削除前に確認
+
+>기본값<
+>Defaults<
+>初期値<
+
+이전 / 다음 페이지 (1장 보기에서는 이전 / 다음 장)
+Previous / next page (previous / next image in single view)
+前 / 次のページ (1枚表示では前 / 次の画像)
+
+'10페이지씩'
+'10 pages at a time'
+'10ページずつ'
+
+페이지 안에서 이전 / 다음 칸 (마우스를 올려도 선택됨)
+Previous / next cell on the page (hovering also selects)
+ページ内で前 / 次のセル (マウスを乗せても選択)
+
+'PgUp / PgDn · 휠'
+'PgUp / PgDn · wheel'
+'PgUp / PgDn · ホイール'
+
+'이전 / 다음 페이지'
+'Previous / next page'
+'前 / 次のページ'
+
+처음 / 마지막 · 페이지 번호로 이동
+First / last · go to a page number
+最初 / 最後 · ページ番号で移動
+
+'다음 "안 본" 페이지로'
+'Next page with unseen images'
+'次の「未確認」ページへ'
+
+' (불합격)'
+' (reject)'
+' (不合格)'
+
+메모 (최근 메모 버튼으로 재사용)
+Note (recent notes reusable as buttons)
+メモ (最近のメモをボタンで再利用)
+
+되돌리기 (체크·일괄 합격)
+Undo (marks · bulk pass)
+元に戻す (チェック・一括合格)
+
+'Ctrl+클릭 · X'
+'Ctrl+click · X'
+'Ctrl+クリック · X'
+
+'선택 추가/해제'
+'Add to / remove from selection'
+'選択に追加/解除'
+
+'Shift+클릭 · Shift+↑↓'
+'Shift+click · Shift+↑↓'
+'Shift+クリック · Shift+↑↓'
+
+'범위 선택'
+'Range select'
+'範囲選択'
+
+'누른 채 칸 훑기'
+'Drag across cells'
+'押したままセルをなぞる'
+
+'여러 칸 선택'
+'Select several cells'
+'複数セルを選択'
+
+'이 페이지 / 목록 전체 선택'
+'Select this page / the whole list'
+'このページ / リスト全体を選択'
+
+'선택 해제 → 1장 보기 닫기'
+'Clear selection → close single view'
+'選択解除 → 1枚表示を閉じる'
+
+'안 본 것 일괄 합격 (선택·지금까지·목록 전체)'
+'Pass all unseen (selection · up to here · whole list)'
+'未確認を一括合格 (選択・ここまで・リスト全体)'
+
+'휴지통으로 (선택 전부 또는 현재 칸)'
+'Send to Recycle Bin (whole selection or current cell)'
+'ごみ箱へ (選択すべてまたは現在のセル)'
+
+'검열 덧칠: 블러(1)·모자이크(2)·먹칠(3), 브러시(B)·사각형(R)·부드럽게(F), [ ] 굵기, Shift+휠 세기, Space 원본 비교, Enter 저장 · Shift+Enter 저장 후 다음 \'검열 약함\' 컷 — 원본은 보관되고 복원 가능'
+'Censor touch-up: blur (1) · mosaic (2) · black fill (3), brush (B) · rectangle (R) · soft edge (F), [ ] size, Shift+wheel strength, Space compare with original, Enter save · Shift+Enter save and open the next "Weak censoring" image — the original is kept and can be restored'
+'修正加筆: ぼかし(1)・モザイク(2)・黒塗り(3)、ブラシ(B)・矩形(R)・やわらかく(F)、[ ] 太さ、Shift+ホイール 強さ、Space 元画像と比較、Enter 保存 · Shift+Enter 保存して次の「修正が弱い」画像へ — 元画像は保管され、復元できます'
+
+'Space (누르고 있기)'
+'Space (hold)'
+'Space (押している間)'
+
+'원본 크게 보기'
+'View the original large'
+'元画像を大きく表示'
+
+'Enter · 더블클릭'
+'Enter · double-click'
+'Enter · ダブルクリック'
+
+'1장 보기 ↔ 원래 보기'
+'Single view ↔ previous view'
+'1枚表示 ↔ 元の表示'
+
+'휠 · 드래그 (1장 보기)'
+'Wheel · drag (single view)'
+'ホイール · ドラッグ (1枚表示)'
+
+'확대 · 이동, 더블클릭 = 원래 보기'
+'Zoom · pan, double-click = previous view'
+'拡大 · 移動、ダブルクリック = 元の表示'
+
+'세트별 보기 ↔ 그리드'
+'Set view ↔ grid'
+'セット別表示 ↔ グリッド'
+
+'한 화면 장수'
+'Images per screen'
+'1画面の枚数'
+
+'칸 배경 (검정·회색·흰색·체크무늬)'
+'Cell background (black · gray · white · checkerboard)'
+'セル背景 (黒・グレー・白・市松模様)'
+
+'파일명 · 정보 패널 · 폴더 트리'
+'Filenames · info panel · folder tree'
+'ファイル名 · 情報パネル · フォルダツリー'
+
+ · 탐색기'
+ · Explorer'
+ · エクスプローラー'
+
+'검색 (p:open mouth, -smile 처럼 쓰면 프롬프트 검색)'
+'Search (p:open mouth, -smile searches prompts)'
+'検索 (p:open mouth, -smile のように書くとプロンプト検索)'
+
+'폴더 다시 읽기'
+'Reload folder'
+'フォルダ再読み込み'
+
+'우클릭'
+'Right-click'
+'右クリック'
+
+'체크 메뉴'
+'Mark menu'
+'チェックメニュー'
+
+체크 없는 이미지는 본 것만 합격으로 칩니다(주황 점 = 아직 안 봄). ★대표를 고른 세트의 나머지는 세트 탈락으로 흐리게 표시됩니다.
+Unmarked images count as passed only once seen (orange dot = not seen yet). In a set with a ★ pick, the rest are dimmed as dropped from the set.
+チェックのない画像は確認済みのものだけ合格扱いです(オレンジの点 = まだ未確認)。★代表を選んだセットの残りはセット落ちとして薄く表示されます。
+
+체크한 뒤 파일이 바뀌면(재생성 덮어쓰기) 이전 체크는 '파일 바뀜'으로 무시되고 다시 안 본 것이 됩니다.
+If a file changes after marking (overwritten by a regeneration), the old marks are ignored as "File changed" and the image becomes unseen again.
+チェック後にファイルが変わると(再生成で上書き)、以前のチェックは「ファイル変更」として無視され、未確認に戻ります。
+
+프롬프트 읽는 중… (처음 한 번은 몇 초 걸립니다)
+Reading prompts… (the first time takes a few seconds)
+プロンプトを読み込み中… (初回は数秒かかります)
+
+프롬프트 일치 ${res.rels.length}장 (메타데이터 있는 ${res.with_prompt}/${res.scanned}장 중)
+${res.rels.length} prompt matches (of ${res.with_prompt}/${res.scanned} images with metadata)
+プロンプト一致 ${res.rels.length}枚 (メタデータあり ${res.with_prompt}/${res.scanned}枚中)
+
+검색 실패:
+Search failed:
+検索に失敗:
+
+`획 ${CE.ops.length}`
+`Strokes: ${CE.ops.length}`
+`ストローク ${CE.ops.length}`
+
+아직 칠하지 않음
+Nothing painted yet
+まだ塗っていません
+
+검열 덧칠은 png · webp · jpg만 됩니다.
+Censor touch-up works on png · webp · jpg only.
+修正加筆は png · webp · jpg のみ対応です。
+
+`이미지 ${r.status}`
+`image ${r.status}`
+`画像 ${r.status}`
+
+</kbd> 블러<
+</kbd> Blur<
+</kbd> ぼかし<
+
+</kbd> 모자이크<
+</kbd> Mosaic<
+</kbd> モザイク<
+
+</kbd> 먹칠<
+</kbd> Black fill<
+</kbd> 黒塗り<
+
+</kbd> 브러시<
+</kbd> Brush<
+</kbd> ブラシ<
+
+</kbd> 사각형<
+</kbd> Rectangle<
+</kbd> 矩形<
+
+칠한 모양의 테두리를 부드럽게 흐린다(새로 칠하는 획부터)
+Softens the edge of painted shapes (from the next stroke on)
+塗った形の縁をやわらかくぼかす(次のストロークから)
+
+</kbd> 부드럽게<
+</kbd> Soft edge<
+</kbd> やわらかく<
+
+[ ] 키
+[ ] keys
+[ ] キー
+
+>굵기 <
+>Size <
+>太さ <
+
+>세기 <
+>Strength <
+>強さ <
+
+↶ 되돌리기
+↶ Undo
+↶ 元に戻す
+
+처음 덧칠하기 전 원본으로 되돌립니다
+Reverts to the original from before the first touch-up
+最初の加筆前の元画像に戻します
+
+>원본 복원<
+>Restore original<
+>元画像に戻す<
+
+>취소 <
+>Cancel <
+>キャンセル <
+
+저장하고 목록에서 다음 '검열 약함' 체크 컷을 연다
+Save and open the next image marked 'Weak censoring' in the list
+保存して、リスト内の次の「修正が弱い」チェック画像を開く
+
+>저장 후 다음 <
+>Save, then next <
+>保存して次へ <
+
+>저장 <
+>Save <
+>保存 <
+
+원본 (덧칠 전)
+Original (before touch-up)
+元画像 (加筆前)
+
+드래그 = 칠하기 · 휠 = 확대 · 우클릭/가운데 드래그 = 이동 · <kbd>[</kbd> <kbd>]</kbd> 굵기 · Shift+휠 세기 · <kbd>0</kbd> 화면 맞춤 · Ctrl+Z 되돌리기 · Space 누르고 있기 = 원본 비교
+Drag = paint · wheel = zoom · right/middle drag = pan · <kbd>[</kbd> <kbd>]</kbd> size · Shift+wheel strength · <kbd>0</kbd> fit to screen · Ctrl+Z undo · hold Space = compare with original
+ドラッグ = 塗る · ホイール = 拡大 · 右/中ボタンドラッグ = 移動 · <kbd>[</kbd> <kbd>]</kbd> 太さ · Shift+ホイール 強さ · <kbd>0</kbd> 画面に合わせる · Ctrl+Z 元に戻す · Space を押している間 = 元画像と比較
+
+· 저장하면 원본은 뷰어 data\\${S.cfg.censor_dir}에 한 번 보관되고, 이 컷의 '검열 약함' 체크가 풀립니다
+· on save, the original is kept once in the viewer's data\\${S.cfg.censor_dir} and this image's "Weak censoring" mark is cleared
+· 保存すると元画像はビューアの data\\${S.cfg.censor_dir} に一度だけ保管され、この画像の「修正が弱い」チェックが外れます
+
+ · 이미 ${info.edits}번 덧칠한 컷
+ · already touched up ${info.edits} time(s)
+ · すでに ${info.edits}回加筆した画像
+
+편집기를 열지 못했습니다:
+Could not open the editor:
+エディターを開けませんでした:
+
+저장하지 않은 덧칠이 있습니다 — 한 번 더 누르면 버립니다.
+Unsaved touch-up — press again to discard it.
+保存していない加筆があります — もう一度押すと破棄します。
+
+칠한 곳이 없습니다.
+Nothing painted.
+塗った箇所がありません。
+
+검열 덧칠 저장${
+Touch-up saved${
+修正加筆を保存${
+
+ (${res.edits}번째)
+ (#${res.edits})
+ (${res.edits}回目)
+
+ — 원본은 data\\${S.cfg.censor_dir}에 보관
+ — original kept in data\\${S.cfg.censor_dir}
+ — 元画像は data\\${S.cfg.censor_dir} に保管
+
+ · 다음 '검열 약함' 컷:
+ · next 'Weak censoring' image:
+ · 次の「修正が弱い」画像:
+
+ · 남은 '검열 약함' 컷 없음
+ · no 'Weak censoring' images left
+ · 残りの「修正が弱い」画像はありません
+
+<h2>원본 복원 —
+<h2>Restore original —
+<h2>元画像に戻す —
+
+처음 덧칠하기 전 파일로 되돌립니다. 지금까지 저장한 덧칠은 모두 사라지고, 보관한 원본 사본은 지웁니다.
+Reverts the file to how it was before the first touch-up. All saved touch-ups are lost and the kept copy of the original is removed.
+最初の加筆前のファイルに戻します。これまで保存した加筆はすべて消え、保管していた元画像のコピーは削除されます。
+
+>원본으로 (Enter)<
+>Restore (Enter)<
+>元に戻す (Enter)<
+
+원본으로 되돌렸습니다.
+Original restored.
+元画像に戻しました。
+
+복원 실패:
+Restore failed:
+復元に失敗:
+
+'다시 읽음'
+'Reloaded'
+'再読み込みしました'
+
+배경:
+Background:
+背景:
+
+폴더 경로 복사됨
+Folder path copied
+フォルダのパスをコピーしました
+
+'복사됨'
+'Copied'
+'コピーしました'
+
+복사 실패:
+Copy failed:
+コピーに失敗:
+
+초기화 실패:
+Startup failed:
+初期化に失敗:
+
+"Shift+휠"
+"Shift+wheel"
+"Shift+ホイール"

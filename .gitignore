@@ -1,0 +1,12 @@
+# personal review records, touch-up originals, personal config
+data/
+config.local.json
+_local/
+
+# runtime and build output (the release zip is attached to GitHub Releases, not committed)
+runtime/
+runtime.partial/
+dist/
+
+__pycache__/
+*.pyc
