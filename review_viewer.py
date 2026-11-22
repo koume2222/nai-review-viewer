@@ -9,17 +9,22 @@
 """
 import argparse
 import datetime
+import errno
 import gzip
 import hashlib
+import http.client
 import importlib.util
 import json
 import math
 import os
 import re
 import shutil
+import socket
 import sqlite3
+import stat
 import subprocess
 import sys
+import tempfile
 import threading
 import urllib.parse
 import urllib.request
@@ -43,10 +48,20 @@ MIME = {'.png': 'image/png', '.jpg': 'image/jpeg', '.jpeg': 'image/jpeg', '.jfif
 
 VERSION = '1.0.0'
 # config.local.json이 있으면 그것을 쓴다(개인 설정 — 업데이트로 config.json이 바뀌어도 유지된다).
-CFG_PATH = next(p for p in (Path(os.environ.get('NAI_REVIEW_CONFIG') or APP_DIR / 'config.local.json'),
-                            APP_DIR / 'config.json') if p.exists())
-CFG = json.loads(CFG_PATH.read_text(encoding='utf-8-sig'))
-TAGS = {t['id']: t for t in CFG['tags']}
+CFG_PATH = Path(os.environ.get('NAI_REVIEW_CONFIG') or APP_DIR / 'config.local.json')
+if not os.environ.get('NAI_REVIEW_CONFIG') and not CFG_PATH.exists():
+    CFG_PATH = APP_DIR / 'config.json'
+try:
+    CFG = json.loads(CFG_PATH.read_text(encoding='utf-8-sig'))
+    TAGS = {t['id']: t for t in CFG['tags']}
+    SET_RX = re.compile(CFG['set_suffix_regex'])
+    if any('label' not in tag or 'kind' not in tag for tag in TAGS.values()):
+        raise ValueError('Each tag needs a label and kind.')
+except (OSError, ValueError, KeyError, TypeError, re.error) as exc:
+    message = f'Cannot load {CFG_PATH}. Check the JSON settings and required fields. ({exc})'
+    if __name__ == '__main__':
+        sys.exit(message)
+    raise ValueError(message) from exc
 # 내보내기 폴더·파일 이름(기본은 영문, config에서 바꾼다)
 EXPORT_DIRNAME = CFG.get('export_dirname', '_review')
 EXPORT_NAME = CFG.get('export_name', 'review')
@@ -71,7 +86,9 @@ def _os_lang():
 def _initial_lang():
     saved = None
     try:
-        saved = json.loads(SETTINGS_PATH.read_text(encoding='utf-8')).get('lang')
+        settings = json.loads(SETTINGS_PATH.read_text(encoding='utf-8'))
+        if isinstance(settings, dict):
+            saved = settings.get('lang')
     except (OSError, ValueError):
         pass
     for cand in (os.environ.get('NAI_REVIEW_LANG'), saved, CFG.get('lang')):
@@ -82,24 +99,38 @@ def _initial_lang():
 
 LANG = _initial_lang()
 _TR_CACHE = {}
+_LANG_LOCK = threading.Lock()
 
 
 def set_lang(lang):
     global LANG
     if lang not in LANGS:
         raise ValueError(f'unknown language: {lang}')
-    LANG = lang
-    SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
-    SETTINGS_PATH.write_text(json.dumps({'lang': lang}), encoding='utf-8')
+    if lang != 'ko':
+        _i18n('ui.txt')
+        _i18n('server.txt')
+    with _LANG_LOCK:
+        SETTINGS_PATH.parent.mkdir(parents=True, exist_ok=True)
+        tmp = tempfile.NamedTemporaryFile(dir=SETTINGS_PATH.parent, delete=False)
+        try:
+            with tmp:
+                tmp.write(json.dumps({'lang': lang}).encode('utf-8'))
+            os.replace(tmp.name, SETTINGS_PATH)
+        finally:
+            Path(tmp.name).unlink(missing_ok=True)
+        LANG = lang
 
 
 def _i18n(name):
     """사전 파일(.txt): 세 줄(한국어 / English / 日本語)이 한 묶음, 묶음 사이는 빈 줄, ';;'로 시작하면 주석."""
     path = I18N_DIR / name
-    key = path.stat().st_mtime_ns if path.exists() else 0
+    try:
+        key = path.stat().st_mtime_ns
+    except FileNotFoundError as exc:
+        raise FileNotFoundError(f'Missing i18n/{name}. Restore the i18n folder from the viewer package.') from exc
     if _TR_CACHE.get(name, (None,))[0] != key:
         rows, cur = [], []
-        for line in (path.read_text(encoding='utf-8').splitlines() if key else []):
+        for line in path.read_text(encoding='utf-8').splitlines():
             if line.startswith(';;'):
                 continue
             if line == '':
@@ -110,6 +141,8 @@ def _i18n(name):
                 cur.append(line)
         if cur:
             rows.append(cur)
+        if not rows or any(len(row) != len(LANGS) for row in rows):
+            raise ValueError(f'Invalid i18n/{name}. Restore the i18n folder from the viewer package.')
         _TR_CACHE[name] = (key, rows)
     return _TR_CACHE[name][1]
 
@@ -141,7 +174,7 @@ def tags_public():
 
 
 def ui_text(name):
-    """static 파일 본문. 한국어가 아니면 i18n/ui.json의 긴 문구부터 차례로 바꾼다."""
+    """static 파일 본문. 한국어가 아니면 i18n/ui.txt의 긴 문구부터 차례로 바꾼다."""
     text = (STATIC_DIR / name).read_text(encoding='utf-8')
     if LANG != 'ko':
         col = LANGS.index(LANG)
@@ -158,12 +191,23 @@ def _censor_backup_dir():
 
 
 CENSOR_BACKUP_DIR = _censor_backup_dir()
-SET_RX = re.compile(CFG['set_suffix_regex'])
 DECODE_SEM = threading.BoundedSemaphore(max(2, (os.cpu_count() or 4) - 1))
 
 
 def norm(p):
     return os.path.normcase(os.path.abspath(p))
+
+
+def within(path, root):
+    return path == root or path.startswith(root.rstrip('\\/') + os.sep)
+
+
+def path_pair(path):
+    return norm(path), norm(os.path.realpath(path))
+
+
+def inside_open_root(pair, root):
+    return within(pair[0], root[0]) and within(pair[1], root[1])
 
 
 def natkey(s):
@@ -318,9 +362,10 @@ STORE = None
 def scan(root):
     """root 아래 이미지 목록(자연 정렬, 폴더 깊이 우선)과 폴더별 장수."""
     root = os.path.abspath(root)
+    resolved_root = norm(os.path.realpath(root))
     files, dirs = [], []
 
-    def walk(path, rel, depth):
+    def walk(path, rel, depth, resolved, ancestors):
         try:
             entries = sorted(os.scandir(path), key=lambda e: natkey(e.name))
         except OSError:
@@ -332,10 +377,16 @@ def scan(root):
         for e in entries:
             if e.is_dir(follow_symlinks=False):
                 if not e.name.startswith('.') and e.name != EXPORT_DIRNAME:
-                    subdirs.append(e)
+                    child = os.path.join(resolved, os.path.normcase(e.name))
+                    if getattr(e.stat(follow_symlinks=False), 'st_reparse_tag', 0) == stat.IO_REPARSE_TAG_MOUNT_POINT:
+                        child = norm(os.path.realpath(e.path))
+                    if within(child, resolved_root) and child not in ancestors:
+                        subdirs.append((e, child))
                 continue
             stem, ext = os.path.splitext(e.name)
-            if ext.lower() not in IMG_EXT:
+            if ext.lower() not in IMG_EXT or not e.is_file():
+                continue
+            if e.is_symlink() and not within(norm(os.path.realpath(e.path)), resolved_root):
                 continue
             st = e.stat()
             set_stem = SET_RX.sub('', stem) or stem
@@ -344,12 +395,12 @@ def scan(root):
                           'set': f'{rel}/{set_stem}' if rel else set_stem})
             entry['direct'] += 1
         total = entry['direct']
-        for s in subdirs:
-            total += walk(s.path, f'{rel}/{s.name}' if rel else s.name, depth + 1)
+        for s, child in subdirs:
+            total += walk(s.path, f'{rel}/{s.name}' if rel else s.name, depth + 1, child, ancestors | {child})
         entry['count'] = total
         return total
 
-    walk(root, '', 0)
+    walk(root, '', 0, resolved_root, {resolved_root})
     return {'root': root, 'files': files, 'dirs': [d for d in dirs if d['count'] or not d['rel']]}
 
 
@@ -365,9 +416,9 @@ def read_list(list_file, existing_only=True):
     return [os.path.abspath(p) for p in paths if p and is_image(p) and (os.path.isfile(p) or not existing_only)]
 
 
-def scan_list(list_file):
+def scan_list(list_file, paths=None):
     """목록 모드: 목록에 든 이미지만, 그 공통 상위 폴더를 root로."""
-    paths = read_list(list_file)
+    paths = read_list(list_file) if paths is None else [p for p in paths if os.path.isfile(p)]
     if not paths:
         raise FileNotFoundError(T('목록에 있는 이미지가 없습니다: {path}', path=list_file))
     root = os.path.commonpath([os.path.dirname(p) for p in paths])
@@ -800,16 +851,20 @@ def _llm_meta(path):
         return None
     if not nai:
         return None
-    return {k: nai[k] for k in ('seed', 'prompt', 'uc', 'char_captions', 'char_uc') if nai.get(k)}
+    fields = ('seed', 'prompt', 'uc', 'char_captions', 'char_uc')
+    return {k: nai[k] for k in fields if nai.get(k) not in (None, '', [])}
 
 
-def build_export(folder, list_file=None):
-    data = scan_list(list_file) if list_file else scan(folder)
+def build_export(folder, list_file=None, *, list_root=None):
+    paths = read_list(list_file, existing_only=False) if list_file else []
+    if list_root and any(not inside_open_root(path_pair(p), list_root) for p in paths if os.path.isfile(p)):
+        raise ValueError('The list now points outside the opened folder. Reopen the list.')
+    data = scan_list(list_file, paths) if list_file else scan(folder)
     root = data['root']
     if list_file and folder and norm(folder) != norm(root):   # 목록 모드에서 하위 폴더만
         sub = os.path.relpath(folder, root).replace(os.sep, '/')
         data['files'] = [f for f in data['files'] if f['dir'] == sub or f['dir'].startswith(sub + '/')]
-    listed = {norm(p) for p in read_list(list_file, existing_only=False)} if list_file else None
+    listed = {norm(p) for p in paths} if list_file else None
     revs = STORE.reviews(root)
     seen = STORE.seen(root)
     mtimes = {f['rel'].lower(): f['mtime'] for f in data['files']}
@@ -991,29 +1046,45 @@ def export_markdown(rep):
     return '\n'.join(L) + '\n'
 
 
-def write_export(folder, list_file=None):
-    rep = build_export(folder, list_file)
+def write_export(folder, list_file=None, *, list_root=None):
+    rep = build_export(folder, list_file, list_root=list_root)
     md = export_markdown(rep)
     # 목록 모드는 목록 파일 옆에 쓴다(NAIS3 씬 폴더를 건드리지 않게)
-    out_dir = (Path(list_file).parent if list_file else Path(rep['folder'])) / EXPORT_DIRNAME
+    base = Path(list_file).parent if list_file else Path(rep['folder'])
+    out_dir = base / EXPORT_DIRNAME
+    if not out_dir.resolve().is_relative_to(base.resolve()):
+        raise ValueError('Export directory is outside the selected folder.')
     out_dir.mkdir(exist_ok=True)
     stamp = datetime.datetime.now().strftime('%Y%m%d-%H%M%S')
     js = json.dumps(rep, ensure_ascii=False, indent=1)
-    for name in (f'{EXPORT_NAME}-{stamp}', EXPORT_LATEST):
-        (out_dir / f'{name}.json').write_text(js, encoding='utf-8')
-        (out_dir / f'{name}.md').write_text(md, encoding='utf-8')
+    outputs = [(out_dir / f'{name}.{ext}', content) for name in (f'{EXPORT_NAME}-{stamp}', EXPORT_LATEST)
+               for ext, content in (('json', js), ('md', md))]
+    if any(not path.resolve().is_relative_to(out_dir.resolve()) for path, _ in outputs):
+        raise ValueError('Export file is outside the results directory.')
+    for path, content in outputs:
+        path.write_text(content, encoding='utf-8')
     return rep, md, {'json': str(out_dir / f'{EXPORT_LATEST}.json'), 'md': str(out_dir / f'{EXPORT_LATEST}.md')}
 
 
 # ───────────────────────── HTTP ─────────────────────────
 
 ALLOWED_ROOTS = set()
-PORT = int(os.environ.get('NAI_REVIEW_PORT') or CFG.get('port', 8765))
+OPEN_LIST_ROOTS = {}
+EXPORTED_REPORTS = {}
+try:
+    PORT = int(os.environ.get('NAI_REVIEW_PORT') or CFG.get('port', 8765))
+    if not 1 <= PORT <= 65535:
+        raise ValueError
+except (TypeError, ValueError):
+    message = 'Set NAI_REVIEW_PORT or the config port to a number from 1 to 65535.'
+    if __name__ == '__main__':
+        sys.exit(message)
+    raise ValueError(message) from None
 
 
 def allowed(path):
-    p = norm(path)
-    return any(p == r or p.startswith(r.rstrip('\\/') + os.sep) for r in ALLOWED_ROOTS)
+    pair = path_pair(path)
+    return any(inside_open_root(pair, root) for root in ALLOWED_ROOTS.copy())
 
 
 def pick_directory(initial):
@@ -1027,7 +1098,8 @@ def pick_directory(initial):
         ps = ('Add-Type -AssemblyName System.Windows.Forms; [Console]::OutputEncoding = [Text.Encoding]::UTF8; '
               '$d = New-Object System.Windows.Forms.FolderBrowserDialog; $d.Description = $env:NRV_TITLE; '
               'if ($env:NRV_INITIAL) { $d.SelectedPath = $env:NRV_INITIAL }; '
-              '$o = New-Object System.Windows.Forms.Form -Property @{TopMost = $true}; '
+              '$o = New-Object System.Windows.Forms.Form -Property @{ShowInTaskbar = $false; Opacity = 0}; '
+              '$o.Show(); $o.TopMost = $true; '
               'if ($d.ShowDialog($o) -eq "OK") { [Console]::Out.Write($d.SelectedPath) }')
         res = subprocess.run(['powershell', '-NoProfile', '-STA', '-Command', ps], capture_output=True,
                              env={**env, 'NRV_INITIAL': initial or '', 'NRV_TITLE': T('검수할 폴더 선택')})
@@ -1056,6 +1128,7 @@ class Handler(BaseHTTPRequestHandler):
                    {'Cache-Control': 'no-store'})
 
     def _error(self, code, msg):
+        self.close_connection = True
         self._send(code, msg.encode('utf-8'), 'text/plain; charset=utf-8')
 
     def _file(self, path, ctype, cache=True):
@@ -1064,6 +1137,11 @@ class Handler(BaseHTTPRequestHandler):
 
     def _host_ok(self):
         return self.headers.get('Host', '') in (f'127.0.0.1:{PORT}', f'localhost:{PORT}')
+
+    def _api_origin_ok(self):
+        origin = self.headers.get('Origin')
+        return (self.headers.get('Sec-Fetch-Site') not in ('cross-site', 'same-site')
+                and (origin is None or origin == 'http://' + self.headers['Host']))
 
     def _image_arg(self, q):
         p = q.get('p', '')
@@ -1088,6 +1166,8 @@ class Handler(BaseHTTPRequestHandler):
         q = dict(urllib.parse.parse_qsl(u.query))
         try:
             route = u.path
+            if route.startswith('/api/') and not self._api_origin_ok():
+                return self._error(403, 'bad origin')
             if route in ('/', '/index.html', '/app.js', '/app.css'):
                 name = 'index.html' if route in ('/', '/index.html') else route[1:]
                 return self._send(200, ui_text(name).encode('utf-8'), MIME[os.path.splitext(name)[1]],
@@ -1108,13 +1188,15 @@ class Handler(BaseHTTPRequestHandler):
                         data = scan_list(q['list'])
                     except FileNotFoundError as e:
                         return self._error(404, str(e))
-                    ALLOWED_ROOTS.add(norm(data['root']))
+                    root = path_pair(data['root'])
+                    OPEN_LIST_ROOTS[path_pair(q['list'])] = root
+                    ALLOWED_ROOTS.add(root)
                     return self._json(data)
                 root = q.get('root', '')
                 if not os.path.isdir(root):
                     return self._error(404, T('폴더가 없습니다: {path}', path=root))
                 data = scan(root)
-                ALLOWED_ROOTS.add(norm(data['root']))
+                ALLOWED_ROOTS.add(path_pair(data['root']))
                 STORE.touch_recent(data['root'])
                 return self._json(data)
             if route == '/api/reviews':
@@ -1156,14 +1238,18 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self._host_ok():
             return self._error(403, 'bad host')
-        origin = self.headers.get('Origin')
-        if origin and origin not in (f'http://127.0.0.1:{PORT}', f'http://localhost:{PORT}'):
+        if not self._api_origin_ok():
             return self._error(403, 'bad origin')
-        if not self.headers.get('Content-Type', '').startswith('application/json'):
+        if self.headers.get_content_type() != 'application/json':
             return self._error(415, 'json only')
-        body = json.loads(self.rfile.read(int(self.headers.get('Content-Length', 0))) or b'{}')
         route = urllib.parse.urlsplit(self.path).path
         try:
+            size = int(self.headers.get('Content-Length', 0))
+            if size <= 0:
+                return self._error(400, 'expected a JSON object')
+            body = json.loads(self.rfile.read(size))
+            if not isinstance(body, dict):
+                return self._error(400, 'expected a JSON object')
             if route == '/api/lang':
                 set_lang(body.get('lang'))
                 return self._json({'lang': LANG})
@@ -1172,7 +1258,7 @@ class Handler(BaseHTTPRequestHandler):
                 items = []
                 for it in body['items']:
                     p = os.path.join(root, it['rel'].replace('/', os.sep))
-                    if allowed(p) and os.path.isfile(p):
+                    if allowed(p) and is_image(p) and os.path.isfile(p):
                         items.append((p, [t for t in it.get('tags', []) if t in TAGS], it.get('note', '').strip()))
                 STORE.set_reviews(items)
                 return self._json({'ok': True, 'saved': len(items)})
@@ -1219,14 +1305,20 @@ class Handler(BaseHTTPRequestHandler):
                 if not allowed(folder) or not os.path.isdir(folder):
                     return self._error(403, 'outside root')
                 list_file = body.get('list') or None
-                if list_file and not os.path.isfile(list_file):
-                    return self._error(404, 'no list file')
-                rep, md, paths = write_export(folder, list_file)
+                list_root = None
+                if list_file:
+                    list_root = OPEN_LIST_ROOTS.get(path_pair(list_file))
+                    if not list_root or not inside_open_root(path_pair(folder), list_root):
+                        return self._error(403, 'scan list first')
+                    if not os.path.isfile(list_file):
+                        return self._error(404, 'no list file')
+                rep, md, paths = write_export(folder, list_file, list_root=list_root)
+                EXPORTED_REPORTS.update(path_pair(p) for p in paths.values())
                 return self._json({'summary': rep['summary'], 'md': md, 'paths': paths,
                                    'regen': [i['rel'] for i in rep['items'] if i['regen']]})
             if route == '/api/reveal':
                 p = body['path']
-                if not allowed(p) or not os.path.exists(p):
+                if not (allowed(p) or EXPORTED_REPORTS.get(norm(p)) == norm(os.path.realpath(p))) or not os.path.exists(p):
                     return self._error(404, 'no path')
                 p = os.path.normpath(p)
                 subprocess.Popen(f'explorer /select,"{p}"' if os.path.isfile(p) else f'explorer "{p}"')
@@ -1260,9 +1352,20 @@ def open_browser(url):
 def already_running(port):
     try:
         with urllib.request.urlopen(f'http://127.0.0.1:{port}/api/ping', timeout=0.5) as r:
-            return json.loads(r.read()).get('app') == 'nai-review-viewer'
-    except (OSError, ValueError):
+            result = json.loads(r.read(4096))
+            return isinstance(result, dict) and result.get('app') == 'nai-review-viewer'
+    except (OSError, ValueError, http.client.HTTPException):
         return False
+
+
+class ViewerServer(ThreadingHTTPServer):
+    allow_reuse_address = False
+    allow_reuse_port = False
+
+    def server_bind(self):
+        if os.name == 'nt':
+            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_EXCLUSIVEADDRUSE, 1)
+        super().server_bind()
 
 
 def serve(folder, browser=True, list_file=None):
@@ -1276,7 +1379,14 @@ def serve(folder, browser=True, list_file=None):
         if browser:
             open_browser(url)
         return
-    srv = ThreadingHTTPServer(('127.0.0.1', PORT), Handler)
+    try:
+        srv = ViewerServer(('127.0.0.1', PORT), Handler)
+    except OSError as exc:
+        if exc.errno == errno.EADDRINUSE or getattr(exc, 'winerror', None) == 10048:
+            sys.exit(T('포트 {port}를 이미 사용 중입니다. 다른 프로그램을 닫거나 NAI_REVIEW_PORT를 바꾸세요.', port=PORT))
+        if exc.errno == errno.EACCES:
+            sys.exit(T('포트 {port}를 열 수 없습니다. NAI_REVIEW_PORT에 다른 포트 번호를 지정하세요.', port=PORT))
+        raise
     srv.daemon_threads = True
     print(T('NAI 검수 뷰어: {url}', url=url) + '\n' + T('이 창을 닫으면 뷰어가 종료됩니다.'), flush=True)
     if browser:
@@ -1290,7 +1400,10 @@ def serve(folder, browser=True, list_file=None):
 def llm_prompt():
     """Claude Code·Codex 등에 붙여 넣는 연결 프롬프트(이 PC의 실제 경로가 들어간다). 본문은 i18n/llm-prompt.<언어>.txt."""
     tpl = (I18N_DIR / f'llm-prompt.{LANG}.txt').read_text(encoding='utf-8')
-    return tpl.format(py=sys.executable, script=APP_DIR / 'review_viewer.py', doc=APP_DIR / 'LLM-CONNECT.md')
+    # The templates enclose command paths in single quotes for PowerShell.
+    return tpl.format(py=sys.executable.replace("'", "''"),
+                      script=str(APP_DIR / 'review_viewer.py').replace("'", "''"),
+                      doc=APP_DIR / 'LLM-CONNECT.md')
 
 
 def main():
@@ -1337,4 +1450,10 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        if LANG != 'ko':
+            _i18n('server.txt')
+            _i18n('ui.txt')
+        main()
+    except (OSError, ValueError) as exc:
+        sys.exit(str(exc))

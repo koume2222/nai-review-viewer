@@ -48,7 +48,7 @@ If you downloaded the source (Code → Download ZIP), run `Install.bat` once, th
 **Features**
 
 - Grid, per-set and single-image views, folder tree, filters, filename and prompt search
-- One number key marks a reject reason; notes, bulk actions, undo
+- Mark a rejection reason with one number key, add notes, apply marks in bulk, and undo changes
 - Censor touch-up: paint blur, mosaic or black fill on the spot and save to the same file (the original is kept and can be restored)
 - Reads NovelAI generation info (PNG text, EXIF, alpha stealth)
 - Delete goes to the Windows Recycle Bin
@@ -58,7 +58,7 @@ See **`Guide.html`** in the install folder for usage. For connecting an LLM, see
 
 ## 日本語
 
-数百〜数千枚の NovelAI 画像を目ですばやく検品する Windows 用ローカルアプリです。チェックなしで確認した画像は合格で、問題のある画像にだけ理由をチェックします。結果は Markdown・JSON で書き出します。
+数百〜数千枚の NovelAI 画像をすばやく目視確認できる Windows 用ローカルアプリです。チェックなしで確認した画像は合格で、問題のある画像にだけ理由をチェックします。結果は Markdown・JSON で書き出します。
 
 **インストール**
 
@@ -72,7 +72,7 @@ See **`Guide.html`** in the install folder for usage. For connecting an LLM, see
 
 - グリッド・セット別・1枚表示、フォルダツリー、フィルター、ファイル名・プロンプト検索
 - 数字キーひとつで不合格の理由をチェック、メモ、複数枚の一括操作、元に戻す
-- 修正加筆: ぼかし・モザイク・黒塗りをその場で塗って同じファイルに保存(元画像は保管され、復元可能)
+- 修正加筆：その場でぼかし・モザイク・黒塗りを加えて上書き保存。元画像は保管され、復元できます
 - NovelAI の生成情報の読み取り(PNG テキスト・EXIF・アルファ stealth)
 - 削除は Windows のごみ箱へ
 - 検品記録はこの PC にのみ保存され、外部には何も送信しません

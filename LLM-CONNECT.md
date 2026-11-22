@@ -4,22 +4,22 @@ This file is written for an LLM agent (Claude Code, Codex, and similar). The vie
 
 A person opens a folder of generated images in the viewer and marks the ones that fail. You read the result through the CLI below. You never need the viewer window, the HTTP server, or the database file.
 
-## Commands
+## PowerShell commands
 
-`PY` is the Python that ships with the viewer (`runtime\python.exe` inside the install folder). If that folder does not exist, use a system Python 3.10+ that has Pillow and numpy. `APP` is `review_viewer.py` in the install folder.
+`PY` is the Python that ships with the viewer (`runtime\python.exe` inside the install folder). If that folder does not exist, use a system Python 3.10+ that has Pillow and numpy. `APP` is `review_viewer.py` in the install folder. Substitute the actual paths. Inside a single-quoted PowerShell path, write an apostrophe twice.
 
 | Purpose | Command |
 |---|---|
-| Open the viewer on a folder (blocks until the console is closed; run it in the background) | `"PY" "APP" "<image folder>"` |
-| Open only specific images (list mode) | `"PY" "APP" --list "<list.txt>"` |
-| Read the results of a folder | `"PY" "APP" export "<image folder>" --print json` |
-| Read the results of a list | `"PY" "APP" export --list "<list.txt>" --print json` |
+| Open the viewer on a folder (blocks until the console is closed; run it in the background) | `& 'PY' 'APP' '<image folder>'` |
+| Open only specific images (list mode) | `& 'PY' 'APP' --list '<list.txt>'` |
+| Read the results of a folder | `& 'PY' 'APP' export '<image folder>' --print json` |
+| Read the results of a list | `& 'PY' 'APP' export --list '<list.txt>' --print json` |
 | Same, as Markdown | replace `--print json` with `--print md` |
 
 - `export` also writes `<image folder>/_review/review-latest.json` and `.md` (plus timestamped copies). In list mode they go next to the list file. The folder and file names can be changed in `config.json` (`export_dirname`, `export_name`, `export_latest`).
 - A list file is UTF-8 text with one absolute image path per line, or a JSON array of paths, or `{"items": [{"file": "<path>"}]}`.
 - If the server is already running, the open command only opens another window and returns.
-- Output text follows the viewer's language setting (Korean, English or Japanese). Field names and the values of `verdict`, `tag_ids` and `kind` never change, so branch on those, not on labels.
+- Output text follows the viewer's language setting (Korean, English or Japanese). Use `items[].verdict`, `items[].tag_ids` and `tag_defs[].kind` for decisions across languages. Keys in `summary.by_tag` are translated labels.
 
 ## How to read the verdicts
 
@@ -34,9 +34,9 @@ The viewer records what the person looked at. An image with no mark is a pass on
 | `pass` | Passed, with a note | Adopt; read the note |
 | not in `items` | Seen with no mark (counted in `summary.pass_unmarked`), or unseen | Seen = pass. Unseen = no verdict yet |
 
-- `unseen[]` lists images the person has not looked at. Do not treat them as passed; ask the person to finish, or to use "Pass all".
+- `unseen[]` lists unseen images with no verdict. An unseen, unmarked sibling of a ★ pick already has a `set_reject` verdict in `items[]`. Do not treat them as passed; ask the person to finish, or to use "Pass all".
 - `deleted[]` lists files the person sent to the Recycle Bin, with the marks they had.
-- `censor_edited[]` lists files the person fixed in the viewer by painting censoring over them. The file itself is already fixed, so do not regenerate it. `backup` is the path of the untouched original.
+- `censor_edited[]` lists files the person fixed in the viewer by painting censoring over them. The touch-up clears the censor mark. Check the current verdict in `items[]` for any remaining reasons to regenerate. `backup` is the path of the untouched original.
 - `summary.stale` counts images whose file changed after they were marked (for example, overwritten by a regeneration). Their old marks are ignored and they count as unseen again.
 - A **set** is the group of images in one folder whose names are equal after removing a trailing variant number (`_2`, `_3`, `_round_01_2`; `_01` with a leading zero is not a variant number). The rule is `set_suffix_regex` in `config.json`.
 
@@ -49,11 +49,11 @@ tag_defs[]       id, kind (positive | keeper | negative), label, llm_hint
 summary          total, seen, pass_unmarked, unseen_unmarked, reject, set_reject, keeper, more,
                  stale, deleted, censor_edited, by_tag
 items[]          rel, path, set, verdict, regen, more, tags (labels), tag_ids, note, seen, updated,
-                 nai {seed, prompt, uc, char_captions, char_uc}   (only for reject / more / keeper)
+                 nai {seed, prompt, uc, char_captions, char_uc}   (only for reject / more / keeper; null if no NAI metadata, individual fields optional)
 sets[]           set, size, keeper[], reject[], set_reject[], more[]
 deleted[]        rel, tags, tag_ids, note, deleted_at
 censor_edited[]  rel, edits, last_at, backup
-unseen[]         rel
+unseen[]         relative path strings
 ```
 
 `nai` is the NovelAI generation metadata read from the image (PNG text chunk, EXIF, or the alpha-channel stealth data).

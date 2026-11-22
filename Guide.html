@@ -63,7 +63,7 @@ footer { color:var(--dim); font-size:14px; text-align:center; margin-top:28px; }
 <p class="lead">
   <span class="k">수백~수천 장의 NovelAI 이미지를 눈으로 빠르게 훑고, 불합격 컷에만 사유를 체크하는 Windows용 로컬 앱입니다. 인터넷으로 아무것도 보내지 않습니다.</span>
   <span class="e">A local Windows app for skimming hundreds or thousands of NovelAI images by eye and marking only the ones that fail. Nothing is sent over the internet.</span>
-  <span class="j">数百〜数千枚の NovelAI 画像を目ですばやく確認し、不合格の画像にだけ理由をチェックする Windows 用ローカルアプリです。インターネットには何も送信しません。</span>
+  <span class="j">数百〜数千枚の NovelAI 画像をすばやく目視確認し、不合格の画像にだけ理由をチェックする Windows 用ローカルアプリです。インターネットには何も送信しません。</span>
 </p>
 <nav class="toc">
   <a href="#install"><span class="k">설치</span><span class="e">Install</span><span class="j">インストール</span></a>
@@ -192,7 +192,7 @@ footer { color:var(--dim); font-size:14px; text-align:center; margin-top:28px; }
 <tr><td><kbd>←</kbd> <kbd>→</kbd> · <kbd>PgUp</kbd> <kbd>PgDn</kbd></td><td><span class="k">이전 / 다음 페이지. Shift를 같이 누르면 10페이지씩</span><span class="e">Previous / next page. Hold Shift to move 10 pages</span><span class="j">前 / 次のページ。Shift を押しながらで 10 ページずつ</span></td></tr>
 <tr><td><kbd>↑</kbd> <kbd>↓</kbd></td><td><span class="k">페이지 안에서 칸 이동 (마우스를 올려도 선택)</span><span class="e">Move between cells on the page (hovering also selects)</span><span class="j">ページ内でセルを移動 (マウスを乗せても選択)</span></td></tr>
 <tr><td><kbd>Enter</kbd> · <span class="k">더블클릭</span><span class="e">double-click</span><span class="j">ダブルクリック</span></td><td><span class="k">1장 보기 ↔ 원래 보기 (1장 보기에서는 휠로 확대, 드래그로 이동)</span><span class="e">Single view ↔ previous view (in single view: wheel to zoom, drag to pan)</span><span class="j">1枚表示 ↔ 元の表示 (1枚表示ではホイールで拡大、ドラッグで移動)</span></td></tr>
-<tr><td><kbd>Space</kbd></td><td><span class="k">누르고 있는 동안 원본 크게 보기</span><span class="e">Hold to view the original large</span><span class="j">押している間、元画像を大きく表示</span></td></tr>
+<tr><td><kbd>Space</kbd></td><td><span class="k">그리드·세트 보기에서 누르고 있는 동안 원본 크게 보기</span><span class="e">In grid or set view, hold to see the full-size image</span><span class="j">グリッド・セット別表示で押している間、元画像を拡大表示</span></td></tr>
 <tr><td><kbd>+</kbd> <kbd>−</kbd> · <kbd>V</kbd></td><td><span class="k">한 화면 장수(1~48장) · 세트별 보기 ↔ 그리드</span><span class="e">Images per screen (1–48) · set view ↔ grid</span><span class="j">1画面の枚数(1〜48枚) · セット別表示 ↔ グリッド</span></td></tr>
 <tr><td><kbd>U</kbd> · <kbd>G</kbd> · <kbd>Home</kbd> <kbd>End</kbd></td><td><span class="k">다음 "안 본" 페이지로 · 페이지 번호로 이동 · 처음 / 마지막</span><span class="e">Next page with unseen images · go to page number · first / last</span><span class="j">次の「未確認」ページへ · ページ番号で移動 · 最初 / 最後</span></td></tr>
 <tr><td><kbd>F</kbd> · <kbd>I</kbd> · <kbd>B</kbd> · <kbd>K</kbd></td><td><span class="k">파일명 표시 · 정보 패널(경로·프롬프트·seed) · 폴더 트리 · 칸 배경</span><span class="e">Filenames · info panel (path, prompt, seed) · folder tree · cell background</span><span class="j">ファイル名 · 情報パネル(パス・プロンプト・seed) · フォルダツリー · セル背景</span></td></tr>
@@ -241,7 +241,7 @@ footer { color:var(--dim); font-size:14px; text-align:center; margin-top:28px; }
     <li><kbd>Space</kbd>를 누르고 있으면 원본과 비교, <kbd>Ctrl+Z</kbd> 마지막 획 되돌리기</li>
     <li><kbd>Enter</kbd> 저장, <kbd>Shift+Enter</kbd> 저장하고 다음 "검열 약함" 컷 열기, <kbd>Esc</kbd> 취소</li>
   </ul>
-  <p>저장하면 <b>같은 파일에 덮어쓰고</b>, 그 컷의 "검열 약함" 체크가 풀려 합격이 됩니다. 처음 덧칠할 때 원본을 뷰어의 <code>data</code> 폴더에 한 번 보관하므로, 다시 <kbd>E</kbd>로 열어 <b>원본 복원</b>을 누르면 되돌릴 수 있습니다. 이미지에 들어 있는 생성 정보(프롬프트·seed)는 그대로 남습니다.</p>
+  <p>저장하면 <b>같은 파일에 덮어쓰고</b>, 그 컷의 "검열 약함" 체크만 풀립니다. 다른 불합격 사유가 남아 있으면 계속 불합격입니다. 처음 덧칠할 때 원본을 뷰어의 <code>data</code> 폴더에 한 번 보관하므로, 다시 <kbd>E</kbd>로 열어 <b>원본 복원</b>을 누르면 되돌릴 수 있습니다. 이미지에 들어 있는 생성 정보(프롬프트·seed)는 그대로 남습니다.</p>
   <p class="note">먼저 <kbd>9</kbd>로 훑으며 체크해 두고, 첫 컷에서 <kbd>E</kbd> → 칠하기 → <kbd>Shift+Enter</kbd>를 반복하면 체크한 컷을 차례로 고칠 수 있습니다.</p>
 </div>
 <div class="e">
@@ -251,7 +251,7 @@ footer { color:var(--dim); font-size:14px; text-align:center; margin-top:28px; }
     <li>Hold <kbd>Space</kbd> to compare with the original, <kbd>Ctrl+Z</kbd> to undo the last stroke</li>
     <li><kbd>Enter</kbd> save, <kbd>Shift+Enter</kbd> save and open the next "Weak censoring" image, <kbd>Esc</kbd> cancel</li>
   </ul>
-  <p>Saving <b>overwrites the same file</b> and clears that image's "Weak censoring" mark, so it becomes a pass. The first time you touch up a file, the original is kept once in the viewer's <code>data</code> folder; open the image with <kbd>E</kbd> again and press <b>Restore original</b> to go back. The generation info inside the image (prompt, seed) is preserved.</p>
+  <p>Saving <b>overwrites the same file</b> and clears its "Weak censoring" mark. Any other reject reasons still apply. The first time you touch up a file, the original is kept once in the viewer's <code>data</code> folder; open the image with <kbd>E</kbd> again and press <b>Restore original</b> to go back. The generation info inside the image (prompt, seed) is preserved.</p>
   <p class="note">Skim first and mark with <kbd>9</kbd>; then on the first image press <kbd>E</kbd> → paint → <kbd>Shift+Enter</kbd>, and repeat to fix the marked images one after another.</p>
 </div>
 <div class="j">
@@ -261,7 +261,7 @@ footer { color:var(--dim); font-size:14px; text-align:center; margin-top:28px; }
     <li><kbd>Space</kbd> を押している間は元画像と比較、<kbd>Ctrl+Z</kbd> で最後のストロークを取り消し</li>
     <li><kbd>Enter</kbd> 保存、<kbd>Shift+Enter</kbd> 保存して次の「修正が弱い」画像を開く、<kbd>Esc</kbd> キャンセル</li>
   </ul>
-  <p>保存すると<b>同じファイルに上書き</b>され、その画像の「修正が弱い」チェックが外れて合格になります。最初に加筆するとき、元画像をビューアの <code>data</code> フォルダに一度だけ保管するので、もう一度 <kbd>E</kbd> で開いて <b>元画像に戻す</b> を押せば戻せます。画像に含まれる生成情報(プロンプト・seed)はそのまま残ります。</p>
+  <p>保存すると<b>同じファイルに上書き</b>され、その画像の「修正が弱い」のチェックだけが外れます。他の不合格理由が残っていれば、判定は引き続き不合格です。最初に加筆するとき、元画像をビューアの <code>data</code> フォルダに一度だけ保管するので、もう一度 <kbd>E</kbd> で開いて <b>元画像に戻す</b> を押せば戻せます。画像に含まれる生成情報(プロンプト・seed)はそのまま残ります。</p>
   <p class="note">先に <kbd>9</kbd> でチェックしながら見て、最初の画像で <kbd>E</kbd> → 塗る → <kbd>Shift+Enter</kbd> を繰り返すと、チェックした画像を順番に直せます。</p>
 </div>
 </section>
@@ -269,28 +269,28 @@ footer { color:var(--dim); font-size:14px; text-align:center; margin-top:28px; }
 <section id="export">
 <h2><span class="k">7. 결과 내보내기</span><span class="e">7. Export</span><span class="j">7. 書き出し</span></h2>
 <div class="k">
-  <p><b>⇩ 내보내기</b>(<kbd>Ctrl+E</kbd>)를 누르면 지금 폴더 안 <code>_review</code>에 두 파일이 생깁니다.</p>
+  <p><b>⇩ 내보내기</b>(<kbd>Ctrl+E</kbd>)를 누르면 기본 설정에서는 현재 폴더의 <code>_review</code>에 아래 최신 파일과 시각별 사본이 저장됩니다. 목록 모드에서는 목록 파일 옆의 <code>_review</code>에 저장됩니다.</p>
   <ul>
     <li><code>review-latest.md</code> — 사람이 읽기 좋은 요약: 불합격 목록(사유·메모·seed), 세트 대표, 추가 생산 요청, 삭제한 파일</li>
     <li><code>review-latest.json</code> — 같은 내용을 프로그램·LLM이 읽기 좋은 형태로. 불합격 컷의 프롬프트 원문도 들어 있습니다</li>
   </ul>
-  <p>내보내기 창에서 요약이나 불합격 파일명 목록을 바로 복사할 수도 있습니다. 아직 안 본 이미지는 "판정 없음"으로 나가므로, 합격으로 넘기려면 <kbd>P</kbd> 일괄 합격을 먼저 쓰세요.</p>
+  <p>내보내기 창에서 요약이나 불합격 파일명 목록을 바로 복사할 수도 있습니다. 태그 없이 아직 안 본 컷이라도 같은 세트에 ★대표가 있으면 세트 탈락으로 기록됩니다. 판정이 남은 컷을 한꺼번에 합격 처리하려면 <kbd>P</kbd>를 누르세요.</p>
 </div>
 <div class="e">
-  <p>Press <b>⇩ Export</b> (<kbd>Ctrl+E</kbd>) to write two files into <code>_review</code> inside the current folder.</p>
+  <p>Press <b>⇩ Export</b> (<kbd>Ctrl+E</kbd>) to save the latest results and timestamped copies. By default, the <code>_review</code> folder is inside the current folder, or beside the list file in list mode.</p>
   <ul>
     <li><code>review-latest.md</code> — a readable summary: the reject list (reasons, notes, seeds), set picks, make-more requests, deleted files</li>
     <li><code>review-latest.json</code> — the same content for programs and LLMs, including the full prompts of rejected images</li>
   </ul>
-  <p>You can also copy the summary or the list of rejected filenames straight from the export dialog. Images you have not seen are exported with "no verdict"; to pass them, use <kbd>P</kbd> Pass all first.</p>
+  <p>You can also copy the summary or the list of rejected filenames straight from the export dialog. An unseen, unmarked image is dropped from its set if the set has a ★ pick. To pass images that still have no verdict, use <kbd>P</kbd> (Pass all).</p>
 </div>
 <div class="j">
-  <p><b>⇩ 書き出し</b>(<kbd>Ctrl+E</kbd>)を押すと、現在のフォルダ内の <code>_review</code> に 2 つのファイルが作られます。</p>
+  <p><b>⇩ 書き出し</b>(<kbd>Ctrl+E</kbd>)を押すと、最新の結果と日時付きのコピーが保存されます。既定の保存先は、現在のフォルダ内（リストモードではリストファイルと同じ場所）の <code>_review</code> です。</p>
   <ul>
     <li><code>review-latest.md</code> — 人が読みやすい要約: 不合格のリスト(理由・メモ・seed)、セット代表、追加生産の依頼、削除したファイル</li>
     <li><code>review-latest.json</code> — 同じ内容をプログラムや LLM が読みやすい形で。不合格画像のプロンプト原文も含まれます</li>
   </ul>
-  <p>書き出しのダイアログから、要約や不合格ファイル名のリストをそのままコピーすることもできます。まだ見ていない画像は「判定なし」で書き出されるので、合格にするには先に <kbd>P</kbd> 一括合格を使ってください。</p>
+  <p>書き出しのダイアログから、要約や不合格ファイル名のリストをそのままコピーすることもできます。未確認でチェックがない画像も、同じセットに ★代表があれば「セット落ち」になります。まだ判定のない画像をまとめて合格にするには <kbd>P</kbd> を押します。</p>
 </div>
 </section>
 
@@ -389,15 +389,16 @@ footer { color:var(--dim); font-size:14px; text-align:center; margin-top:28px; }
 <script>
 (function () {
   var T = {
-    ko: 'NAI 검수 뷰어(사람이 이미지를 눈으로 검수하는 로컬 앱)를 이 작업 환경에 연결해 줘.\n\n1. 먼저 이 문서를 읽어: {doc}\n2. 네가 매 세션 읽는 지침 파일에 「NAI 검수 뷰어」 절을 추가해 줘. Claude Code면 CLAUDE.md, Codex면 AGENTS.md이고, 지금 프로젝트에 없으면 사용자 전역 지침 파일에 넣어. 내용은 10줄 이내로 다음만 적어.\n   - 뷰어 열기: "{py}" "{script}" "<이미지 폴더>"\n   - 검수 결과 읽기: "{py}" "{script}" export "<이미지 폴더>" --print json\n   - 판정 규칙 요약: 체크 없이 본 것 = 합격, 부정 사유 = 불합격(재생성), ★대표 세트의 나머지 = 세트 탈락(재생성 불필요), +추가 = 합격 + 추가 생산, 안 본 것 = 판정 없음, 검열 덧칠한 것 = 재생성 불필요\n   - 상세 규칙과 JSON 필드는 {doc} 참조\n3. 다음 명령이 도는지 확인해 줘: "{py}" "{script}" export --help\n4. 어느 파일에 무엇을 추가했는지 알려 줘.\n\n앞으로 내가 "검수 끝났어"라고 하면 검수 결과를 읽고, 불합격 컷을 사유별로 정리한 다음 어떻게 고쳐 다시 뽑을지 제안해 줘. 이미지 파일을 지우거나 덮어쓰는 일은 내가 시킬 때만 해.\n',
-    en: 'Please connect NAI Review Viewer (a local app where a person reviews images by eye) to this working environment.\n\n1. First read this document: {doc}\n2. Add an "NAI Review Viewer" section to the instruction file you read every session. That is CLAUDE.md for Claude Code and AGENTS.md for Codex; if this project has none, use my user-level instruction file. Keep it within 10 lines and include only:\n   - Open the viewer: "{py}" "{script}" "<image folder>"\n   - Read the review results: "{py}" "{script}" export "<image folder>" --print json\n   - Verdict rules in brief: seen with no mark = pass, negative reason = reject (regenerate), the rest of a set with a ★ pick = dropped from set (no regeneration), +more = pass and make more, unseen = no verdict, censor-touched = no regeneration needed\n   - For the detailed rules and JSON fields, see {doc}\n3. Check that this command runs: "{py}" "{script}" export --help\n4. Tell me which file you changed and what you added.\n\nFrom now on, when I say "review done", read the review results, group the rejected images by reason, and propose how to fix and regenerate them. Delete or overwrite image files only when I ask you to.\n',
-    ja: 'NAI 検品ビューア(人が画像を目で検品するローカルアプリ)をこの作業環境に接続してください。\n\n1. まずこの文書を読んでください: {doc}\n2. あなたが毎セッション読む指示ファイルに「NAI 検品ビューア」の節を追加してください。Claude Code なら CLAUDE.md、Codex なら AGENTS.md で、このプロジェクトになければユーザー全体の指示ファイルに入れてください。内容は 10 行以内で、次の項目だけにしてください。\n   - ビューアを開く: "{py}" "{script}" "<画像フォルダ>"\n   - 検品結果を読む: "{py}" "{script}" export "<画像フォルダ>" --print json\n   - 判定ルールの要約: チェックなしの確認済み = 合格、否定の理由 = 不合格(再生成)、★代表があるセットの残り = セット落ち(再生成不要)、+追加 = 合格 + 追加生産、未確認 = 判定なし、修正を加筆したもの = 再生成不要\n   - 詳しいルールと JSON のフィールドは {doc} を参照\n3. 次のコマンドが動くか確認してください: "{py}" "{script}" export --help\n4. どのファイルに何を追加したか教えてください。\n\n今後、私が「検品終わった」と言ったら、検品結果を読み、不合格の画像を理由別に整理して、どう直して再生成するかを提案してください。画像ファイルの削除や上書きは、私が頼んだときだけ行ってください。\n'
+    "ko": "NAI 검수 뷰어(사람이 이미지를 눈으로 검수하는 로컬 앱)를 이 작업 환경에 연결해 줘.\n\n1. 먼저 이 문서를 읽어: {doc}\n2. 네가 매 세션 읽는 지침 파일에 「NAI 검수 뷰어」 절을 추가해 줘. Claude Code면 CLAUDE.md, Codex면 AGENTS.md이고, 지금 프로젝트에 없으면 사용자 전역 지침 파일에 넣어. 내용은 10줄 이내로 다음만 적어.\n   - 뷰어 열기 (PowerShell): & '{py}' '{script}' '<이미지 폴더>'\n   - 검수 결과 읽기: & '{py}' '{script}' export '<이미지 폴더>' --print json\n   - 판정 규칙 요약: 체크 없이 본 것 = 합격, 부정 사유 = 불합격(재생성), ★대표 세트의 태그 없는 다른 컷 = 세트 탈락(재생성 불필요), +추가 = 합격 + 추가 생산, unseen[] = 판정 없음, 검열 덧칠은 검열 사유만 해결하므로 다른 불합격 사유가 남으면 재생성\n   - 상세 규칙과 JSON 필드는 {doc} 참조\n3. 다음 명령이 도는지 확인해 줘: & '{py}' '{script}' export --help\n4. 어느 파일에 무엇을 추가했는지 알려 줘.\n\n앞으로 내가 \"검수 끝났어\"라고 하면 검수 결과를 읽고, 불합격 컷을 사유별로 정리한 다음 어떻게 고쳐 다시 뽑을지 제안해 줘. 이미지 파일을 지우거나 덮어쓰는 일은 내가 시킬 때만 해.\n",
+    "en": "Please connect NAI Review Viewer (a local app where a person reviews images by eye) to this working environment.\n\n1. First read this document: {doc}\n2. Add an \"NAI Review Viewer\" section to the instruction file you read every session. That is CLAUDE.md for Claude Code and AGENTS.md for Codex; if this project has none, use my user-level instruction file. Keep it within 10 lines and include only:\n   - Open the viewer (PowerShell): & '{py}' '{script}' '<image folder>'\n   - Read the review results: & '{py}' '{script}' export '<image folder>' --print json\n   - Verdict rules in brief: seen with no mark = pass, negative reason = reject (regenerate), untagged siblings of a ★ pick = dropped from set (no regeneration), +more = pass and make more, unseen[] = no verdict, a censor touch-up resolves only the censor mark. Regenerate if other negative reasons remain\n   - For the detailed rules and JSON fields, see {doc}\n3. Check that this command runs: & '{py}' '{script}' export --help\n4. Tell me which file you changed and what you added.\n\nFrom now on, when I say \"review done\", read the review results, group the rejected images by reason, and propose how to fix and regenerate them. Delete or overwrite image files only when I ask you to.\n",
+    "ja": "NAI 検品ビューア(人が画像を目で検品するローカルアプリ)をこの作業環境に接続してください。\n\n1. まずこの文書を読んでください: {doc}\n2. あなたが毎セッション読む指示ファイルに「NAI 検品ビューア」の節を追加してください。Claude Code なら CLAUDE.md、Codex なら AGENTS.md で、このプロジェクトになければユーザー全体の指示ファイルに入れてください。内容は 10 行以内で、次の項目だけにしてください。\n   - ビューアを開く (PowerShell): & '{py}' '{script}' '<画像フォルダ>'\n   - 検品結果を読む: & '{py}' '{script}' export '<画像フォルダ>' --print json\n   - 判定ルールの要約: チェックなしの確認済み = 合格、否定の理由 = 不合格(再生成)、★代表があるセットの他のタグなし画像 = セット落ち(再生成不要)、+追加 = 合格 + 追加生産、unseen[] = 判定なし、修正加筆で解決するのは修正不足のみ。他の不合格理由が残る場合は再生成\n   - 詳しいルールと JSON のフィールドは {doc} を参照\n3. 次のコマンドが動くか確認してください: & '{py}' '{script}' export --help\n4. どのファイルに何を追加したか教えてください。\n\n今後、私が「検品終わった」と言ったら、検品結果を読み、不合格の画像を理由別に整理して、どう直して再生成するかを提案してください。画像ファイルの削除や上書きは、私が頼んだときだけ行ってください。\n"
   };
   var root = document.documentElement, dir = document.getElementById('dir'), out = document.getElementById('ptext');
   function fill() {
     var d = dir.value.trim().replace(/[\\\/]+$/, '');
-    out.value = T[root.dataset.lang].split('{py}').join(d + '\\runtime\\python.exe')
-      .split('{script}').join(d + '\\review_viewer.py').split('{doc}').join(d + '\\LLM-CONNECT.md');
+    var commandDir = d.replace(/'/g, "''");
+    out.value = T[root.dataset.lang].split('{py}').join(commandDir + '\\runtime\\python.exe')
+      .split('{script}').join(commandDir + '\\review_viewer.py').split('{doc}').join(d + '\\LLM-CONNECT.md');
   }
   function setLang(l) {
     root.dataset.lang = l; root.lang = l;

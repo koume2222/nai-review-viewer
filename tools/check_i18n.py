@@ -3,6 +3,7 @@
 
   python tools/check_i18n.py      (빠진 것이 없으면 종료 코드 0)
 """
+import json
 import re
 import sys
 from pathlib import Path
@@ -47,6 +48,14 @@ def main():
             if len(row) != 3:
                 bad += 1
                 print(f'[{name}] 세 줄 묶음이 아님: {row[:1]}')
+    # Guide.html must work offline via file://, so it embeds the CLI's prompt templates.
+    guide = (ROOT / 'Guide.html').read_text(encoding='utf-8')
+    prompts, _ = json.JSONDecoder().raw_decode(guide.split('var T = ', 1)[1])
+    for lang in rv.LANGS:
+        template = (ROOT / 'i18n' / f'llm-prompt.{lang}.txt').read_text(encoding='utf-8')
+        if prompts.get(lang) != template:
+            bad += 1
+            print(f'[Guide.html] llm-prompt.{lang}.txt 불일치')
     print('빠진 번역 없음' if not bad else f'빠진 번역 {bad}건')
     sys.exit(1 if bad else 0)
 
