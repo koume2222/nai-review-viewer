@@ -12,8 +12,16 @@ import zipfile
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-EXCLUDE_TOP = {'data', '_local', 'dist', '.git', '.github', '.gitignore', '.gitattributes', 'config.local.json', 'runtime.partial'}
-EXCLUDE_ANY = {'__pycache__', '_검수결과'}
+# Only these public files and the installed runtime belong in the release.
+PUBLIC_FILES = (
+    'NAI-Review-Viewer.bat', 'Install.bat', 'Copy-LLM-Prompt.bat',
+    'review_viewer.py', 'config.json', 'Guide.html', 'README.md', 'LLM-CONNECT.md',
+    'LICENSE', 'THIRD-PARTY-NOTICES.md',
+    'static/index.html', 'static/app.js', 'static/app.css',
+    'i18n/ui.txt', 'i18n/server.txt', 'i18n/llm-prompt.ko.txt',
+    'i18n/llm-prompt.en.txt', 'i18n/llm-prompt.ja.txt',
+    'tools/install_runtime.ps1', 'tools/build_release.py', 'tools/check_i18n.py',
+)
 
 
 def main():
@@ -22,9 +30,12 @@ def main():
     version = re.search(r"^VERSION = '([^']+)'", (ROOT / 'review_viewer.py').read_text(encoding='utf-8'), re.M).group(1)
     out = ROOT / 'dist' / f'nai-review-viewer-{version}-win64.zip'
     out.parent.mkdir(exist_ok=True)
-    files = [p for p in sorted(ROOT.rglob('*'))
-             if p.is_file() and p.relative_to(ROOT).parts[0] not in EXCLUDE_TOP
-             and not EXCLUDE_ANY.intersection(p.relative_to(ROOT).parts) and p.suffix != '.pyc']
+    files = [ROOT / name for name in PUBLIC_FILES]
+    for path in files:
+        if not path.is_file():
+            sys.exit(f'릴리스 필수 파일이 없습니다: {path.relative_to(ROOT)}')
+    files.extend(p for p in sorted((ROOT / 'runtime').rglob('*'))
+                 if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc')
     with zipfile.ZipFile(out, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as z:
         for p in files:
             z.write(p, Path('NAI-Review-Viewer') / p.relative_to(ROOT))

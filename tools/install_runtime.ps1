@@ -1,5 +1,5 @@
 # Builds .\runtime : an embeddable Python + Pillow + numpy, private to this folder.
-# Nothing is installed system-wide. Run via "설치.bat" (or: powershell -ExecutionPolicy Bypass -File tools\install_runtime.ps1).
+# Nothing is installed system-wide. Run via "Install.bat" (or: powershell -ExecutionPolicy Bypass -File tools\install_runtime.ps1).
 # Sources: python.org (embeddable zip, SHA-256 pinned below) and pypi.org (wheels, SHA-256 checked against the PyPI index).
 # This file is ASCII-only on purpose (Windows PowerShell 5.1 reads BOM-less files as ANSI).
 
@@ -18,9 +18,10 @@ $work = Join-Path $root 'runtime.partial'
 $tmp  = Join-Path ([IO.Path]::GetTempPath()) ('nrv-setup-' + [Guid]::NewGuid().ToString('N'))
 
 function Get-Checked($url, $out, $sha) {
+    if ($sha -notmatch '^[0-9a-fA-F]{64}$') { throw "Missing or invalid SHA-256 for $url" }
     Invoke-WebRequest -Uri $url -OutFile $out -UseBasicParsing
     $got = (Get-FileHash -Algorithm SHA256 -LiteralPath $out).Hash.ToLower()
-    if ($sha -and $got -ne $sha.ToLower()) { throw "SHA-256 mismatch for $url (got $got)" }
+    if ($got -ne $sha.ToLower()) { throw "SHA-256 mismatch for $url (got $got)" }
     return $got
 }
 

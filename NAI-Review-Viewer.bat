@@ -13,4 +13,7 @@ if exist "runtime\python.exe" (
   )
   python review_viewer.py "%~1"
 )
-if errorlevel 1 pause
+if errorlevel 1 (
+  pause
+  exit /b 1
+)

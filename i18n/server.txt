@@ -181,6 +181,14 @@ The connection prompt was copied to the clipboard. Paste it into your Claude Cod
 A folder or --list is required
 フォルダまたは --list が必要です
 
+포트 {port}를 이미 사용 중입니다. 다른 프로그램을 닫거나 NAI_REVIEW_PORT를 바꾸세요.
+Port {port} is already in use. Close the other program or change NAI_REVIEW_PORT.
+ポート {port} は使用中です。他のプログラムを閉じるか、NAI_REVIEW_PORT を変更してください。
+
+포트 {port}를 열 수 없습니다. NAI_REVIEW_PORT에 다른 포트 번호를 지정하세요.
+Cannot open port {port}. Choose a different port with NAI_REVIEW_PORT.
+ポート {port} を開けません。NAI_REVIEW_PORT に別のポート番号を指定してください。
+
 불합격 {reject} · 세트 탈락 {set_reject} · 대표 {keeper} · 추가 생산 {more} · 삭제 {deleted} · 안 본 것 {unseen_unmarked} / 전체 {total}
 rejected {reject} · dropped from set {set_reject} · picks {keeper} · make more {more} · deleted {deleted} · unseen {unseen_unmarked} / total {total}
 不合格 {reject} · セット落ち {set_reject} · 代表 {keeper} · 追加生産 {more} · 削除 {deleted} · 未確認 {unseen_unmarked} / 全体 {total}

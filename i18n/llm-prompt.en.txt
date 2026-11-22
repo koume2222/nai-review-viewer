@@ -2,11 +2,11 @@ Please connect NAI Review Viewer (a local app where a person reviews images by e
 
 1. First read this document: {doc}
 2. Add an "NAI Review Viewer" section to the instruction file you read every session. That is CLAUDE.md for Claude Code and AGENTS.md for Codex; if this project has none, use my user-level instruction file. Keep it within 10 lines and include only:
-   - Open the viewer: "{py}" "{script}" "<image folder>"
-   - Read the review results: "{py}" "{script}" export "<image folder>" --print json
-   - Verdict rules in brief: seen with no mark = pass, negative reason = reject (regenerate), the rest of a set with a ★ pick = dropped from set (no regeneration), +more = pass and make more, unseen = no verdict, censor-touched = no regeneration needed
+   - Open the viewer (PowerShell): & '{py}' '{script}' '<image folder>'
+   - Read the review results: & '{py}' '{script}' export '<image folder>' --print json
+   - Verdict rules in brief: seen with no mark = pass, negative reason = reject (regenerate), untagged siblings of a ★ pick = dropped from set (no regeneration), +more = pass and make more, unseen[] = no verdict, a censor touch-up resolves only the censor mark. Regenerate if other negative reasons remain
    - For the detailed rules and JSON fields, see {doc}
-3. Check that this command runs: "{py}" "{script}" export --help
+3. Check that this command runs: & '{py}' '{script}' export --help
 4. Tell me which file you changed and what you added.
 
 From now on, when I say "review done", read the review results, group the rejected images by reason, and propose how to fix and regenerate them. Delete or overwrite image files only when I ask you to.
